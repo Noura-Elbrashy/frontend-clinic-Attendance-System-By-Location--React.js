@@ -1,48 +1,137 @@
-Enhanced UI Styles
+/* Custom styles for AdminBranches component */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-h2, h3 {
-  font-family: 'Roboto', 'Cairo', sans-serif;
-  color: #333;
-  font-weight: 700;
+/* Toast animations and styles */
+.toast {
+  animation: slideInRight 0.5s ease-in-out;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgb(238, 235, 235);
 }
 
+.toast.bg-success {
+  background: linear-gradient(90deg, #2ecc71, #1abc9c) !important;
+}
+
+.toast.bg-danger {
+  background: linear-gradient(90deg, #992417, #c23d3d) !important;
+}
+
+.toast-body {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #dad0d0;
+}
+
+/* Modal styles */
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding: 20px;
+  background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+}
+
+.modal-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-body {
+  padding: 20px;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 15px 20px;
+}
+
+.btn-delete {
+  background: linear-gradient(90deg, #e74c3c, #ff7675);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-delete:hover {
+  background: linear-gradient(90deg, #c0392b, #e74c3c);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Card styling */
 .card {
   border: none;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  transition: transform 0.2s ease-in-out;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
 .card:hover {
   transform: translateY(-5px);
 }
 
-.card-body {
-  padding: 20px;
+.card-header {
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
 }
 
+/* Form styling */
 .form-control {
-  border-radius: var(--border-radius);
-  border: 1px solid #ced4da;
-  transition: border-color 0.2s ease-in-out;
+  border-radius: 5px;
+  transition: border-color 0.2s;
 }
 
 .form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.form-label {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Button styling */
+.btn {
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-weight: 500;
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  border-radius: var(--border-radius);
-  padding: 10px 20px;
-  font-weight: 500;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
 .btn-primary:hover {
@@ -51,11 +140,8 @@ h2, h3 {
 }
 
 .btn-secondary {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-  border-radius: var(--border-radius);
-  padding: 10px 20px;
-  font-weight: 500;
+  background-color: #6c757d;
+  border-color: #6c757d;
 }
 
 .btn-secondary:hover {
@@ -63,38 +149,92 @@ h2, h3 {
   border-color: #5a6268;
 }
 
-.btn-outline-warning, .btn-outline-danger {
-  border-radius: var(--border-radius);
-  padding: 8px 16px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
+.btn-info {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
 }
 
-.btn-outline-warning .fa-icon,
-.btn-outline-danger .fa-icon {
-  margin-right: 8px;
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #138496;
 }
 
-.alert {
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  margin-bottom: 20px;
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #c82333;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #e0a800;
+}
+
+/* Table styling */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  padding: 12px;
+}
+
+.table-dark th {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Map styling */
 .leaflet-container {
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
-/* RTL adjustments for Arabic */
-[dir="rtl"] .btn-outline-warning .fa-icon,
-[dir="rtl"] .btn-outline-danger .fa-icon {
-  margin-right: 0;
-  margin-left: 8px;
-}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .btn-sm {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
 
-[dir="rtl"] .form-control,
-[dir="rtl"] .btn {
-  text-align: right;
+  .card-header h5 {
+    font-size: 1.1rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .modal-body {
+    font-size: 1rem;
+  }
 }

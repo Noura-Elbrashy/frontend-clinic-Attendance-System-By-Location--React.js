@@ -1,0 +1,166 @@
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  max-width: 400px;
+  width: 100%;
+  padding: 2rem;
+}
+
+.login-logo {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-logo:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--secondary-amber);
+}
+
+.logo-fallback {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.forgot-password-link {
+  color: var(--primary-teal);
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+  color: var(--accent-coral);
+  text-decoration: underline;
+}
+
+.modal-content.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+}
+
+.modal-header {
+  border-bottom: none;
+  color: var(--text-dark);
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.toast {
+  animation: slideInRight 0.5s ease-in-out;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: none;
+  background: transparent;
+}
+
+.toast-error {
+  background: linear-gradient(90deg, #e74c3c, #ff7675) !important;
+}
+
+.toast-success {
+  background: linear-gradient(90deg, #2ecc71, #1abc9c) !important;
+}
+
+.toast-error .toast-header,
+.toast-error .toast-body,
+.toast-success .toast-header,
+.toast-success .toast-body {
+  background: transparent !important;
+  color: var(--text-light);
+}
+
+.toast-header {
+  border-bottom: none;
+}
+
+.toast-body {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-card {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+
+  .login-logo {
+    max-width: 120px;
+  }
+
+  .logo-fallback {
+    font-size: 1.25rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .forgot-password-link {
+    font-size: 0.85rem;
+  }
+
+  .modal-title {
+    font-size: 1.1rem;
+  }
+
+  .toast-body {
+    font-size: 0.9rem;
+  }
+}

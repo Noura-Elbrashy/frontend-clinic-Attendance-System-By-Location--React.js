@@ -1,0 +1,426 @@
+
+
+/* تصميم البطاقة الرئيسية */
+.card.shadow-lg {
+  border: none !important;
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(0);
+  transition: var(--transition);
+}
+
+.card.shadow-lg:hover {
+  box-shadow: var(--card-shadow-hover) !important;
+  transform: translateY(-5px);
+}
+
+.card.shadow-lg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--medical-gradient);
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* تصميم رأس البطاقة */
+.card-header.bg-primary {
+  background: var(--medical-gradient) !important;
+  border-bottom: none !important;
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0 !important;
+  padding: 2rem !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header.bg-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* تصميم اللوجو */
+.card-header img {
+  border: 4px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+  transition: var(--transition);
+  position: relative;
+  z-index: 2;
+}
+
+.card-header img:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* تصميم عنوان الصفحة */
+.card-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+}
+
+/* تصميم جسم البطاقة */
+.card-body {
+  background: rgba(255, 255, 255, 0.98) !important;
+  position: relative;
+}
+
+/* تصميم التنبيهات المحسن */
+.alert {
+  border: none !important;
+  border-radius: var(--border-radius) !important;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.alert::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  transition: var(--transition);
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%) !important;
+  color: #dc2626 !important;
+}
+
+.alert-danger::before {
+  background: var(--danger-color);
+}
+
+.alert-success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%) !important;
+  color: #16a34a !important;
+}
+
+.alert-success::before {
+  background: var(--success-color);
+}
+
+.alert-info {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%) !important;
+  color: #0891b2 !important;
+}
+
+.alert-info::before {
+  background: var(--info-color);
+}
+
+/* تحسينات الأيقونات في التنبيهات */
+.alert i {
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* تصميم حقل الإدخال */
+.form-select, .form-control {
+  border: 2px solid rgba(148, 163, 184, 0.3) !important;
+  border-radius: var(--border-radius) !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: var(--transition);
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(5px);
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25) !important;
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.form-label {
+  font-weight: 600 !important;
+  color: #374151 !important;
+  margin-bottom: 0.75rem !important;
+  font-size: 0.95rem !important;
+}
+
+/* تصميم قسم البيومتريكس */
+.bg-light.rounded {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%) !important;
+  border: 2px solid rgba(99, 102, 241, 0.1) !important;
+  border-radius: var(--border-radius) !important;
+  backdrop-filter: blur(5px);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-light.rounded::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: slide 3s infinite;
+}
+
+@keyframes slide {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: -100%; }
+}
+
+/* تصميم الأزرار المحسن */
+.btn {
+  border: none !important;
+  border-radius: var(--border-radius) !important;
+  padding: 1rem 2rem ;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: var(--transition);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+}
+
+/* أزرار خاصة لكل نوع */
+.btn-success {
+  background: var(--gradient-success) !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  filter: brightness(1.1);
+  color: white !important;
+}
+
+.btn-danger {
+  background: var(--gradient-danger) !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  filter: brightness(1.1);
+  color: white !important;
+}
+
+.btn-warning {
+  background: var(--gradient-warning) !important;
+  color: #92400e !important;
+}
+
+.btn-warning:hover {
+  filter: brightness(1.1);
+  color: #92400e !important;
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  background: rgba(37, 99, 235, 0.1) !important;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+/* تحسين حالة التحميل */
+.btn:disabled {
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.spinner-border {
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* تحسين الأيقونات */
+.fas, .far, .fab {
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
+  transition: var(--transition);
+}
+
+.btn:hover .fas {
+  transform: scale(1.1);
+}
+
+/* تصميم النص السفلي */
+.text-muted {
+  background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+}
+
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .card {
+    margin: 1rem ;
+    max-width: calc(100% - 2rem) !important;
+  }
+  
+  .card-header {
+    padding: 1.5rem !important;
+  }
+  
+  .btn {
+    padding:  .8rem !important;
+    font-size: .8rem !important;
+  }
+  
+  .card-header img {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+}
+
+/* تأثيرات إضافية للتفاعل */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.alert {
+  animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* تحسين شكل checkbox */
+.form-check-input:checked {
+  background-color: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25) !important;
+}
+
+.form-check-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25) !important;
+}
+
+/* تحسينات إضافية للوصولية */
+.btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.5) !important;
+}
+
+.form-select:focus, .form-control:focus {
+  outline: none !important;
+}
+
+/* تأثير التحميل المحسن */
+.d-flex.align-items-center.justify-content-center.min-vh-100 {
+  background: var(--medical-gradient) !important;
+}
+
+.spinner-border.text-primary {
+  color: white !important;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* إضافة تأثيرات للنص */
+.text-center p {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* تحسين المسافات */
+.mb-3, .mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.d-grid.gap-3 {
+  gap: 1.25rem !important;
+}
+
+/* تأثيرات خاصة لحالة النجاح والخطأ */
+.alert-success {
+  animation: successPulse 0.6s ease-out;
+}
+
+.alert-danger {
+  animation: errorShake 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(0.95); opacity: 0; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}

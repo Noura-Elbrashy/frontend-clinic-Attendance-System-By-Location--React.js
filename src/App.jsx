@@ -1,7 +1,7 @@
 
+// import { useNavigate } from "react-router-dom";
 
-// دمج اليوزر والداش بورد ادمن بعد 
-// import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+// import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 // import { useState, useEffect } from 'react';
 // import { apiGet } from './helpers/api';
 // import Login from './pages/Login';
@@ -14,8 +14,13 @@
 // import AdminBranches from './pages/AdminBranches';
 // import ErrorBoundary from './components/ErrorBoundary';
 // import ActivateAccount from './components/ActivateAccount';
+// import AddEmployee from './pages/AddEmployee'; // New component for adding employees
+// import ResetPassword from './components/ResetPassword';
+// import ForgotPassword from './components/ForgotPassword';
+
 // import './index.css';
 
+// // ProtectedRoute for admin-only pages
 // function ProtectedRoute({ children }) {
 //   const [isAdmin, setIsAdmin] = useState(null);
 //   const [error, setError] = useState('');
@@ -45,7 +50,7 @@
 //   return error ? <div className="alert alert-danger">{error}</div> : children;
 // }
 
-// // New: For protected pages (non-admin) - redirect to / if no token
+// // For protected pages (non-admin) - redirect to / if no token
 // function AuthenticatedRoute({ children }) {
 //   const navigate = useNavigate();
 //   useEffect(() => {
@@ -58,7 +63,7 @@
 //   return children;
 // }
 
-// // New: For public pages like login and activation - redirect to /dashboard if token exists
+// // For public pages like login and activation - redirect to /dashboard if token exists
 // function PublicRoute({ children, isActivation = false }) {
 //   const navigate = useNavigate();
 //   useEffect(() => {
@@ -114,10 +119,24 @@
 //                 </ProtectedRoute>
 //               }
 //             />
+//             <Route
+//               path="/add-employee"
+//               element={
+//                 <ProtectedRoute>
+//                   <ErrorBoundary>
+//                     <AddEmployee />
+//                   </ErrorBoundary>
+//                 </ProtectedRoute>
+//               }
+//             />
 //             <Route path="/profile/:id" element={<AuthenticatedRoute><UserProfile /></AuthenticatedRoute>} />
 //             <Route path="/activate/:token" element={<PublicRoute isActivation={true}><ActivateAccount /></PublicRoute>} />
 //             <Route path="/not-found" element={<NotFound />} />
-//             <Route path="*" element={<NotFound />} />
+//                     <Route path="/forgot-password" element={<ForgotPassword />} />
+
+//         <Route path="/reset-password/:token" element={<ResetPassword />} />
+//                     <Route path="*" element={<NotFound />} />
+
 //           </Routes>
 //         </div>
 //       </>
@@ -132,8 +151,8 @@
 // }
 
 // export default App;
-import { useNavigate } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { apiGet } from './helpers/api';
@@ -147,7 +166,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminBranches from './pages/AdminBranches';
 import ErrorBoundary from './components/ErrorBoundary';
 import ActivateAccount from './components/ActivateAccount';
-import AddEmployee from './pages/AddEmployee'; // New component for adding employees
+import AddEmployee from './pages/AddEmployee';
+import ResetPassword from './components/ResetPassword';
+import ForgotPassword from './components/ForgotPassword';
+
 import './index.css';
 
 // ProtectedRoute for admin-only pages
@@ -194,16 +216,23 @@ function AuthenticatedRoute({ children }) {
 }
 
 // For public pages like login and activation - redirect to /dashboard if token exists
-function PublicRoute({ children, isActivation = false }) {
+function PublicRoute({ children, isActivation = false, isResetPassword = false }) {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token && !isActivation) {
+    
+    // لا تعيد التوجيه إذا كانت صفحة إعادة تعيين كلمة المرور أو تفعيل الحساب
+    if (token && !isActivation && !isResetPassword) {
       navigate('/dashboard');
     }
-    // For activation, additional backend check is handled in ActivateAccount component
-  }, [navigate, isActivation]);
+  }, [navigate, isActivation, isResetPassword]);
 
+  return children;
+}
+
+// مكون خاص لصفحات إعادة تعيين كلمة المرور (لا يحتاج auth)
+function ResetPasswordRoute({ children }) {
+  // لا نفعل أي شيء، فقط نعرض الأطفال
   return children;
 }
 
@@ -218,17 +247,51 @@ function App() {
 
   function Layout() {
     const location = useLocation();
-    const noNavbarRoutes = ['/', '/not-found'];
-    const isNoNavbarRoute = noNavbarRoutes.includes(location.pathname) || location.pathname.startsWith('/activate/');
+    const noNavbarRoutes = [
+      '/', 
+      '/not-found', 
+      '/forgot-password', 
+      '/reset-password'
+    ];
+    
+    const isNoNavbarRoute = noNavbarRoutes.includes(location.pathname) || 
+                           location.pathname.startsWith('/activate/') ||
+                           location.pathname.startsWith('/reset-password/');
 
     return (
       <>
         {!isNoNavbarRoute && <Navbar changeLanguage={changeLanguage} />}
         <div className="container mt-4">
           <Routes>
+            {/* الصفحات العامة */}
             <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+            
+            {/* صفحات خاصة (لا تحتاج auth ولا تعيد توجيه) */}
+            <Route 
+              path="/activate/:token" 
+              element={
+                <PublicRoute isActivation={true}>
+                  <ActivateAccount />
+                </PublicRoute>
+              } 
+            />
+            
+            <Route 
+              path="/reset-password/:token" 
+              element={
+                <ResetPasswordRoute>
+                  <ResetPassword />
+                </ResetPasswordRoute>
+              } 
+            />
+            
+            {/* الصفحات المحمية للمستخدمين العاديين */}
             <Route path="/dashboard" element={<AuthenticatedRoute><Dashboard /></AuthenticatedRoute>} />
             <Route path="/attendance" element={<AuthenticatedRoute><Attendance /></AuthenticatedRoute>} />
+            <Route path="/profile/:id" element={<AuthenticatedRoute><UserProfile /></AuthenticatedRoute>} />
+            
+            {/* الصفحات المحمية للمديرين فقط */}
             <Route
               path="/adminbranches"
               element={
@@ -259,8 +322,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/profile/:id" element={<AuthenticatedRoute><UserProfile /></AuthenticatedRoute>} />
-            <Route path="/activate/:token" element={<PublicRoute isActivation={true}><ActivateAccount /></PublicRoute>} />
+            
+            {/* صفحات الخطأ */}
             <Route path="/not-found" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
