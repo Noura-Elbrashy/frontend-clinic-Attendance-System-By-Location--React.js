@@ -1695,7 +1695,7 @@ const AdminDashboard = () => {
       try {
         const params = new URLSearchParams();
         params.append('page', pendingPage);
-        if (pendingFilterName) params.append('name', encodeURIComponent(pendingFilterName));
+if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterName));
         const res = await apiGet(`/users/pending-devices?${params.toString()}`);
         setPendingDevices(res.data.pendingDevices || []);
         setPendingPages(res.data.pagination?.pages || 1);
