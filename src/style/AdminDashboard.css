@@ -382,3 +382,21 @@ html[lang="ar"] .toast-container {
     font-size: 0.9rem;
   }
 }
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.form-check-inline {
+  margin-right: 15px;
+}
+.form-check-input {
+  margin-left: 10px;
+}
+.form-check-label {
+  font-weight: 500;
+}
+.text-danger {
+  font-size: 0.875rem;
+  margin-top: 5px;
+}

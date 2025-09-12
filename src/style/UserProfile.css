@@ -1,0 +1,145 @@
+.profile-header {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border-radius: 15px;
+          padding: 2rem;
+          margin-bottom: 2rem;
+        }
+        .stats-card {
+          background: white;
+          border-radius: 10px;
+          padding: 1.5rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          border-left: 4px solid #007bff;
+          transition: transform 0.2s;
+        }
+        .stats-card:hover {
+          transform: translateY(-2px);
+        }
+        .attendance-table {
+          background: white;
+          border-radius: 10px;
+          overflow: hidden;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-item {
+          background: #f8f9fa;
+          border-left: 4px solid #28a745;
+          padding: 1rem;
+          margin-bottom: 1rem;
+          border-radius: 0 10px 10px 0;
+        }
+        .feedback-item.warning {
+          border-left-color: #ffc107;
+          background: #fff3cd;
+        }
+        .btn-custom {
+          background: linear-gradient(45deg, #007bff, #0056b3);
+          border: none;
+          color: white;
+          padding: 0.5rem 1rem;
+          border-radius: 25px;
+          transition: all 0.3s;
+        }
+        .btn-custom:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          color: white;
+        }
+        .card-modern {
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s;
+        }
+        .card-modern:hover {
+          transform: translateY(-2px);
+        }
+        .badge-status {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.8rem;
+          border-radius: 20px;
+        }
+        .table-hover tbody tr:hover {
+          background-color: #f8f9fa;
+        }
+        .pagination .page-link {
+          border-radius: 50px;
+          margin: 0 2px;
+          border: none;
+          color: #007bff;
+        }
+        .pagination .page-item.active .page-link {
+          background: linear-gradient(45deg, #007bff, #0056b3);
+          border: none;
+        }
+
+.report-stat {
+          text-align: center;
+          padding: 0.5rem 0;
+        }
+        .report-stat i {
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+        .deduction-list {
+          background: #fff;
+          border-radius: 8px;
+          padding: 1rem;
+          border: 1px solid #dee2e6;
+        }
+        .feedback-list::-webkit-scrollbar {
+          width: 6px;
+        }
+        .feedback-list::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        .feedback-list::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 10px;
+        }
+        .feedback-list::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+        .toast {
+          font-family: 'Cairo', sans-serif;
+        }
+        @media (max-width: 768px) {
+          .profile-header {
+            text-align: center;
+          }
+          .stats-card {
+            margin-bottom: 1rem;
+          }
+          .table-responsive {
+            font-size: 0.85rem;
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .card-modern {
+          animation: fadeIn 0.5s ease-in-out;
+        }
+        .btn-custom:active {
+          transform: translateY(1px);
+        }
+        .badge-status {
+          font-weight: 500;
+          letter-spacing: 0.5px;
+        }
+        .table th {
+          font-weight: 600;
+          font-size: 0.9rem;
+          border-bottom: 2px solid #dee2e6;
+        }
+        .pagination .page-link:hover {
+          background-color: #e9ecef;
+          transform: translateY(-1px);
+        }
+        

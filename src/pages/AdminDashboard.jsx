@@ -1,709 +1,13 @@
-
 // import { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
-// import { apiGet, apiPost, apiPut, apiDelete } from '../helpers/api';
-
-// const AdminDashboard = () => {
-//   const [employees, setEmployees] = useState([]);
-//   const [branches, setBranches] = useState([]);
-//   const [selectedBranch, setSelectedBranch] = useState('');
-//   const [selectedDate, setSelectedDate] = useState('');
-//   const [attendance, setAttendance] = useState([]);
-//   const [error, setError] = useState('');
-//   const [success, setSuccess] = useState('');
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [attendancePage, setAttendancePage] = useState(1);
-//   const [itemsPerPage] = useState(10);
-//   const [editUser, setEditUser] = useState(null);
-//   const [totalSalaries, setTotalSalaries] = useState(null);
-//   const [year, setYear] = useState(new Date().getFullYear());
-//   const [month, setMonth] = useState(new Date().getMonth() + 1);
-//   const navigate = useNavigate();
-//   const lang = document.documentElement.getAttribute('lang') || 'en';
-
-//   const translations = {
-//     en: {
-//       dashboard: 'Admin Dashboard',
-//       employees: 'Employees',
-//       name: 'Name',
-//       email: 'Email',
-//       branch: 'Branch',
-//       checkIn: 'Check-In',
-//       checkOut: 'Check-Out',
-//       date: 'Date',
-//       day: 'Day',
-//       status: 'Status',
-//       viewProfile: 'View Profile',
-//       selectBranch: 'Select Branch',
-//       selectDate: 'Select Date',
-//       allBranches: 'All Branches',
-//       error: 'An error occurred',
-//       previous: 'Previous',
-//       next: 'Next',
-//       page: 'Page',
-//       edit: 'Edit',
-//       delete: 'Delete',
-//       save: 'Save',
-//       cancel: 'Cancel',
-//       role: 'Role',
-//       phone: 'Phone',
-//       address: 'Address',
-//       salary: 'Salary',
-//       requiredWorkingDays: 'Required Working Days',
-//       workingDaysNames: 'Working Days Names',
-//       workingHoursPerDay: 'Working Hours Per Day',
-//       workStartTime: 'Work Start Time',
-//       workEndTime: 'Work End Time',
-//       absenceDeductionRate: 'Absence Deduction Rate (%)',
-//       lateDeductionRate: 'Late Deduction Rate (%)',
-//       earlyLeaveDeductionRate: 'Early Leave Deduction Rate (%)',
-//       allowRemoteAbsence: 'Allow Remote Absence',
-//       addEmployee: 'Add Employee',
-//       totalSalaries: 'Total Salaries',
-//       calculateSalaries: 'Calculate Salaries for Month',
-//       year: 'Year',
-//       month: 'Month',
-//       total: 'Total Salaries',
-//       branchTotal: 'Branch Total',
-//       noData: 'No data available',
-//       active: 'Active',
-//       resendActivation: 'Resend Activation',
-//       resendSuccess: 'Activation email resent',
-//     },
-//     ar: {
-//       dashboard: 'لوحة تحكم الإدارة',
-//       employees: 'الموظفون',
-//       name: 'الاسم',
-//       email: 'البريد الإلكتروني',
-//       branch: 'الفرع',
-//       checkIn: 'تسجيل الدخول',
-//       checkOut: 'تسجيل الخروج',
-//       date: 'التاريخ',
-//       day: 'اليوم',
-//       status: 'الحالة',
-//       viewProfile: 'عرض الملف الشخصي',
-//       selectBranch: 'اختر الفرع',
-//       selectDate: 'اختر التاريخ',
-//       allBranches: 'جميع الفروع',
-//       error: 'حدث خطأ',
-//       previous: 'السابق',
-//       next: 'التالي',
-//       page: 'الصفحة',
-//       edit: 'تعديل',
-//       delete: 'حذف',
-//       save: 'حفظ',
-//       cancel: 'إلغاء',
-//       role: 'الدور',
-//       phone: 'الهاتف',
-//       address: 'العنوان',
-//       salary: 'الراتب',
-//       requiredWorkingDays: 'أيام العمل المطلوبة',
-//       workingDaysNames: 'أسماء أيام العمل',
-//       workingHoursPerDay: 'ساعات العمل في اليوم',
-//       workStartTime: 'وقت بداية العمل',
-//       workEndTime: 'وقت نهاية العمل',
-//       absenceDeductionRate: 'نسبة خصم الغياب (%)',
-//       lateDeductionRate: 'نسبة خصم التأخير (%)',
-//       earlyLeaveDeductionRate: 'نسبة خصم المغادرة المبكرة (%)',
-//       allowRemoteAbsence: 'السماح بتسجيل الغياب عن بعد',
-//       addEmployee: 'إضافة موظف',
-//       totalSalaries: 'إجمالي المرتبات',
-//       calculateSalaries: 'حساب المرتبات للشهر',
-//       year: 'السنة',
-//       month: 'الشهر',
-//       total: 'إجمالي المرتبات',
-//       branchTotal: 'إجمالي الفرع',
-//       noData: 'لا توجد بيانات',
-//       active: 'مفعل',
-//       resendActivation: 'إعادة إرسال التفعيل',
-//       resendSuccess: 'تم إعادة إرسال إيميل التفعيل',
-//     },
-//   };
-// const [pendingDevices, setPendingDevices] = useState([]);
-// const [pendingPage, setPendingPage] = useState(1);
-// const [pendingPages, setPendingPages] = useState(1);
-
-// useEffect(() => {
-//   const fetchPending = async () => {
-//     const res = await apiGet(`/users/pending-devices?page=${pendingPage}`);
-//     setPendingDevices(res.data.pendingDevices);
-//     setPendingPages(res.data.pagination.pages);
-//   };
-//   fetchPending();
-// }, [pendingPage]);
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const branchRes = await apiGet('/branches');
-//         setBranches(branchRes.data);
-//         const userRes = await apiGet('/users');
-//         setEmployees(userRes.data);
-//         handleAttendanceFilter();
-//       } catch (err) {
-//         setError(translations[lang].error);
-//       }
-//     };
-//     fetchData();
-//   }, [lang]);
-
-//   const handleAttendanceFilter = async () => {
-//     try {
-//       const params = new URLSearchParams();
-//       if (selectedBranch) params.append('branch', selectedBranch);
-//       if (selectedDate) params.append('date', selectedDate);
-//       params.append('page', attendancePage);
-//       params.append('limit', itemsPerPage);
-//       const attendanceRes = await apiGet(`/admin/attendance?${params.toString()}`);
-//       setAttendance(attendanceRes.data);
-//     } catch (err) {
-//       setError(translations[lang].error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     handleAttendanceFilter();
-//   }, [selectedBranch, selectedDate, attendancePage]);
-
-//   const handleBranchFilter = (branchId) => {
-//     setSelectedBranch(branchId);
-//     setAttendancePage(1);
-//   };
-
-//   const handleDateFilter = (date) => {
-//     setSelectedDate(date);
-//     setAttendancePage(1);
-//   };
-
-//   const handleEdit = (user) => {
-//     setEditUser({
-//       ...user,
-//       branches: user.branches.map(b => b._id),
-//       workingDaysNames: user.workingDaysNames.join(','),
-//       absenceDeductionRate: user.absenceDeductionRate * 100,
-//       lateDeductionRate: user.lateDeductionRate * 100,
-//       earlyLeaveDeductionRate: user.earlyLeaveDeductionRate * 100,
-//     });
-//   };
-
-//   const handleDelete = async (id) => {
-//     try {
-//       await apiDelete(`/users/${id}`);
-//       setEmployees(employees.filter(u => u._id !== id));
-//       setSuccess('User deleted');
-//     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
-//     }
-//   };
-
-// // AdminDashboard.jsx - handleSave المحدث
-// const handleSave = async () => {
-//   try {
-//     const dataToSend = {
-//       ...editUser,
-//       workingDaysNames: editUser.workingDaysNames, // لا تحويل هنا، لأنها string، والbackend يتعامل معها
-//       branches: editUser.branches,
-//     };
-//     console.log('Sending data:', dataToSend); // للتصحيح
-//     await apiPut(`/users/${editUser._id}`, dataToSend);
-//     // الباقي كما هو
-//   } catch (err) {
-//     console.error('Update error:', err.response?.data); // عرض الخطأ التفصيلي
-//     setError(translations[lang].error + ': ' + (err.response?.data?.message || err.message));
-//   }
-// };
-
-//   const handleAddEmployee = async () => {
-//     navigate('/add-employee');
-//   };
-
-//   const handleCalculateSalaries = async () => {
-//     try {
-//       const res = await apiGet(`/admin/total-salaries?year=${year}&month=${month}${selectedBranch ? `&branchId=${selectedBranch}` : ''}`);
-//       setTotalSalaries(res.data);
-//     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
-//     }
-//   };
-
-//   const handleResendActivation = async (userId) => {
-//     try {
-//      await apiPost(`/auth/resend-activation/${userId}`, { userId });
-
-//       setSuccess(translations[lang].resendSuccess);
-//     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
-//     }
-//   };
-
-//   const indexOfLastItem = currentPage * itemsPerPage;
-//   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-//   const currentEmployees = employees.slice(indexOfFirstItem, indexOfLastItem);
-
-//   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-//   const attendancePagination = attendance[0]?.pagination || { page: 1, pages: 1 };
-//   const attendancePrev = () => {
-//     if (attendancePage > 1) setAttendancePage(attendancePage - 1);
-//   };
-//   const attendanceNext = () => {
-//     if (attendancePage < attendancePagination.pages) setAttendancePage(attendancePage + 1);
-//   };
-// const handleApprove = async (userId, fingerprint) => {
-//   await apiPost('/users/approve-device', { userId, deviceFingerprint: fingerprint });
-//   // أعد تحميل الجدول
-//   const res = await apiGet(`/users/pending-devices?page=${pendingPage}`);
-//   setPendingDevices(res.data.pendingDevices);
-// };
-
-// const handleReject = async (userId, fingerprint) => {
-//   await apiPost('/users/reject-device', { userId, deviceFingerprint: fingerprint });
-//   // أعد تحميل
-// };
-//   return (
-//     <div className="container mt-4">
-//       <h2>{translations[lang].dashboard}</h2>
-//       {error && <div className="alert alert-danger">{error}</div>}
-//       {success && <div className="alert alert-success">{success}</div>}
-
-//       <div className="card mb-4">
-//         <div className="card-body">
-//           <h3 className="card-title">{translations[lang].employees}</h3>
-//           <button className="btn btn-primary mb-3" onClick={handleAddEmployee}>
-//             {translations[lang].addEmployee}
-//           </button>
-//           <div className="table-responsive">
-//             <table className="table table-bordered">
-//               <thead className="table-primary">
-//                 <tr>
-//                   <th>{translations[lang].name}</th>
-//                   <th>{translations[lang].email}</th>
-//                   <th>{translations[lang].branch}</th>
-//                   <th>{translations[lang].active}</th>
-//                   <th>{translations[lang].actions}</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {currentEmployees.map((emp) => (
-//                   <tr key={emp._id}>
-//                     <td>{emp.name}</td>
-//                     <td>{emp.email}</td>
-//                     <td>{emp.branches.map(b => b.name).join(', ')}</td>
-//                     <td>{emp.isActive ? 'Yes' : 'No'}</td>
-//                     <td>
-//                       <button className="btn btn-sm btn-info me-1" onClick={() => navigate(`/profile/${emp._id}`)}>
-//                         {translations[lang].viewProfile}
-//                       </button>
-//                       <button className="btn btn-sm btn-warning me-1" onClick={() => handleEdit(emp)}>
-//                         {translations[lang].edit}
-//                       </button>
-//                       <button className="btn btn-sm btn-danger me-1" onClick={() => handleDelete(emp._id)}>
-//                         {translations[lang].delete}
-//                       </button>
-//                       {!emp.isActive && (
-//                         <button className="btn btn-sm btn-secondary" onClick={() => handleResendActivation(emp._id)}>
-//                           {translations[lang].resendActivation}
-//                         </button>
-//                       )}
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//             <div className="tab-pane" id="pending-devices">
-//   <h2>Pending Devices</h2>
-//   <table className="table">
-//     <thead>
-//       <tr>
-//         <th>Name</th>
-//         <th>Email</th>
-//         <th>Device</th>
-//         <th>Actions</th>
-//       </tr>
-//     </thead>
-//     <tbody>
-//       {pendingDevices.map((d) => (
-//         <tr key={d.deviceFingerprint}>
-//           <td>{d.userName}</td>
-//           <td>{d.userEmail}</td>
-//           <td>{d.deviceFingerprint}</td>
-//           <td>
-//             <button onClick={() => handleApprove(d.userId, d.deviceFingerprint)}>Approve</button>
-//             <button onClick={() => handleReject(d.userId, d.deviceFingerprint)}>Reject</button>
-//           </td>
-//         </tr>
-//       ))}
-//     </tbody>
-//   </table>
-//   <nav>
-//     <button onClick={() => setPendingPage(p => p - 1)} disabled={pendingPage === 1}>Previous</button>
-//     <span>{pendingPage} / {pendingPages}</span>
-//     <button onClick={() => setPendingPage(p => p + 1)} disabled={pendingPage === pendingPages}>Next</button>
-//   </nav>
-// </div>
-//           </div>
-//           <nav>
-//             <ul className="pagination">
-//               <li className="page-item">
-//                 <button className="page-link" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
-//                   {translations[lang].previous}
-//                 </button>
-//               </li>
-//               <li className="page-item">
-//                 <button className="page-link" onClick={() => paginate(currentPage + 1)} disabled={currentPage >= Math.ceil(employees.length / itemsPerPage)}>
-//                   {translations[lang].next}
-//                 </button>
-//               </li>
-//             </ul>
-//           </nav>
-//         </div>
-//       </div>
-
-//       {editUser && (
-//         <div className="card mb-4">
-//           <div className="card-body">
-//             <h3 className="card-title">{translations[lang].edit} {editUser.name}</h3>
-//             <form>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].name}</label>
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   value={editUser.name}
-//                   onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].email}</label>
-//                 <input
-//                   type="email"
-//                   className="form-control"
-//                   value={editUser.email}
-//                   onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].role}</label>
-//                 <select
-//                   className="form-select"
-//                   value={editUser.role}
-//                   onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}
-//                 >
-//                   <option value="staff">Staff</option>
-//                   <option value="admin">Admin</option>
-//                 </select>
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].branches}</label>
-//                 <select
-//                   multiple
-//                   className="form-select"
-//                   value={editUser.branches}
-//                   onChange={(e) => setEditUser({ ...editUser, branches: Array.from(e.target.selectedOptions, option => option.value) })}
-//                 >
-//                   {branches.map(branch => (
-//                     <option key={branch._id} value={branch._id}>{branch.name}</option>
-//                   ))}
-//                 </select>
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].phone}</label>
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   value={editUser.phone || ''}
-//                   onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].address}</label>
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   value={editUser.address || ''}
-//                   onChange={(e) => setEditUser({ ...editUser, address: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].salary}</label>
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   value={editUser.salary || ''}
-//                   onChange={(e) => setEditUser({ ...editUser, salary: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].requiredWorkingDays}</label>
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   value={editUser.requiredWorkingDays}
-//                   onChange={(e) => setEditUser({ ...editUser, requiredWorkingDays: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].workingDaysNames} (comma-separated)</label>
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   value={editUser.workingDaysNames}
-//                   onChange={(e) => setEditUser({ ...editUser, workingDaysNames: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].workingHoursPerDay}</label>
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   value={editUser.workingHoursPerDay}
-//                   onChange={(e) => setEditUser({ ...editUser, workingHoursPerDay: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].workStartTime} (HH:MM)</label>
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   value={editUser.workStartTime || ''}
-//                   onChange={(e) => setEditUser({ ...editUser, workStartTime: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].workEndTime} (HH:MM)</label>
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   value={editUser.workEndTime || ''}
-//                   onChange={(e) => setEditUser({ ...editUser, workEndTime: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].absenceDeductionRate}</label>
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   value={editUser.absenceDeductionRate}
-//                   onChange={(e) => setEditUser({ ...editUser, absenceDeductionRate: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].lateDeductionRate}</label>
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   value={editUser.lateDeductionRate}
-//                   onChange={(e) => setEditUser({ ...editUser, lateDeductionRate: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3">
-//                 <label className="form-label">{translations[lang].earlyLeaveDeductionRate}</label>
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   value={editUser.earlyLeaveDeductionRate}
-//                   onChange={(e) => setEditUser({ ...editUser, earlyLeaveDeductionRate: e.target.value })}
-//                 />
-//               </div>
-//               <div className="mb-3 form-check">
-//                 <input
-//                   type="checkbox"
-//                   className="form-check-input"
-//                   checked={editUser.allowRemoteAbsence}
-//                   onChange={(e) => setEditUser({ ...editUser, allowRemoteAbsence: e.target.checked })}
-//                 />
-//                 <label className="form-check-label">{translations[lang].allowRemoteAbsence}</label>
-//               </div>
-//               <button type="button" className="btn btn-primary me-2" onClick={handleSave}>
-//                 {translations[lang].save}
-//               </button>
-//               <button type="button" className="btn btn-secondary" onClick={() => setEditUser(null)}>
-//                 {translations[lang].cancel}
-//               </button>
-//             </form>
-//           </div>
-//         </div>
-//       )}
-
-//       <div className="card mb-4">
-//         <div className="card-body">
-//           <h3 className="card-title">{translations[lang].totalSalaries}</h3>
-//           <div className="row">
-//             <div className="col-md-3">
-//               <label className="form-label">{translations[lang].year}</label>
-//               <input
-//                 type="number"
-//                 className="form-control"
-//                 value={year}
-//                 onChange={(e) => setYear(e.target.value)}
-//               />
-//             </div>
-//             <div className="col-md-3">
-//               <label className="form-label">{translations[lang].month}</label>
-//               <input
-//                 type="number"
-//                 className="form-control"
-//                 value={month}
-//                 min={1}
-//                 max={12}
-//                 onChange={(e) => setMonth(e.target.value)}
-//               />
-//             </div>
-//             <div className="col-md-3">
-//               <label className="form-label">{translations[lang].selectBranch}</label>
-//               <select
-//                 className="form-select"
-//                 value={selectedBranch}
-//                 onChange={(e) => setSelectedBranch(e.target.value)}
-//               >
-//                 <option value="">{translations[lang].allBranches}</option>
-//                 {branches.map(branch => (
-//                   <option key={branch._id} value={branch._id}>{branch.name}</option>
-//                 ))}
-//               </select>
-//             </div>
-//             <div className="col-md-3 d-flex align-items-end">
-//               <button className="btn btn-primary" onClick={handleCalculateSalaries}>
-//                 {translations[lang].calculateSalaries}
-//               </button>
-//             </div>
-//           </div>
-//           {totalSalaries && (
-//             <div className="mt-3">
-//               <h4>{translations[lang].total}: {totalSalaries.totalSalaries}</h4>
-//               <table className="table table-bordered mt-2">
-//                 <thead>
-//                   <tr>
-//                     <th>{translations[lang].branch}</th>
-//                     <th>{translations[lang].branchTotal}</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {Object.entries(totalSalaries.branchTotals).map(([branchId, total]) => {
-//                     const branchName = branches.find(b => b._id === branchId)?.name || branchId;
-//                     return (
-//                       <tr key={branchId}>
-//                         <td>{branchName}</td>
-//                         <td>{total}</td>
-//                       </tr>
-//                     );
-//                   })}
-//                 </tbody>
-//               </table>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       <div className="card mb-4">
-//         <div className="card-body">
-//           <h3 className="card-title">{translations[lang].selectBranch}</h3>
-//           <select
-//             className="form-select mb-3"
-//             value={selectedBranch}
-//             onChange={(e) => handleBranchFilter(e.target.value)}
-//           >
-//             <option value="">{translations[lang].allBranches}</option>
-//             {branches.map(branch => (
-//               <option key={branch._id} value={branch._id}>{branch.name}</option>
-//             ))}
-//           </select>
-//           <div className="mb-3">
-//             <label className="form-label">{translations[lang].selectDate}</label>
-//             <input
-//               type="date"
-//               className="form-control"
-//               value={selectedDate}
-//               onChange={(e) => handleDateFilter(e.target.value)}
-//             />
-//           </div>
-//         </div>
-//       </div>
-
-//       <div className="card">
-//         <div className="card-body">
-//           <h3 className="card-title">{translations[lang].employees} {translations[lang].attendance}</h3>
-//           <div className="table-responsive">
-//             <table className="table table-bordered">
-//               <thead className="table-primary">
-//                 <tr>
-//                   <th>{translations[lang].name}</th>
-//                   <th>{translations[lang].branch}</th>
-//                   <th>{translations[lang].date}</th>
-//                   <th>{translations[lang].day}</th>
-//                   <th>{translations[lang].checkIn}</th>
-//                   <th>{translations[lang].checkOut}</th>
-//                   <th>{translations[lang].status}</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {attendance.length === 0 ? (
-//                   <tr>
-//                     <td colSpan="7">{translations[lang].noData}</td>
-//                   </tr>
-//                 ) : (
-//                   attendance.flatMap((record) =>
-//                     record.attendance.length === 0 ? (
-//                       <tr key={record.branch._id}>
-//                         <td colSpan="7">{translations[lang].noData}</td>
-//                       </tr>
-//                     ) : (
-//                       record.attendance.map((att) => {
-//                         const attDate = new Date(att.checkInTime);
-//                         return (
-//                           <tr key={att._id}>
-//                             <td>{att.user?.name || 'N/A'}</td>
-//                             <td>{att.branch?.name || 'N/A'}</td>
-//                             <td>{attDate.toLocaleDateString()}</td>
-//                             <td>{attDate.toLocaleString('en-us', { weekday: 'long' })}</td>
-//                             <td>{attDate.toLocaleTimeString()}</td>
-//                             <td>
-//                               {att.checkOutTime
-//                                 ? new Date(att.checkOutTime).toLocaleTimeString()
-//                                 : '-'}
-//                             </td>
-//                             <td>{translations[lang][att.dayStatus] || att.dayStatus}</td>
-//                           </tr>
-//                         );
-//                       })
-//                     )
-//                   )
-//                 )}
-//               </tbody>
-//             </table>
-//           </div>
-//           <nav>
-//             <ul className="pagination justify-content-center">
-//               <li className="page-item">
-//                 <button className="page-link" onClick={attendancePrev} disabled={attendancePage === 1}>
-//                   {translations[lang].previous}
-//                 </button>
-//               </li>
-//               <li className="page-item disabled">
-//                 <span className="page-link">{attendancePage} / {attendancePagination.pages}</span>
-//               </li>
-//               <li className="page-item">
-//                 <button className="page-link" onClick={attendanceNext} disabled={attendancePage >= attendancePagination.pages}>
-//                   {translations[lang].next}
-//                 </button>
-//               </li>
-//             </ul>
-//           </nav>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AdminDashboard;
-//ترجمه
-// import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+// import { useTranslation } from 'react-i18next';
 // import { apiGet, apiPost, apiPut, apiDelete } from '../helpers/api';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import '@fortawesome/fontawesome-free/css/all.min.css';
 // import '../style/AdminDashboard.css';
 
 // const AdminDashboard = () => {
+//   const { t } = useTranslation();
 //   const [employees, setEmployees] = useState([]);
 //   const [branches, setBranches] = useState([]);
 //   const [selectedBranch, setSelectedBranch] = useState('');
@@ -726,8 +30,12 @@
 //   const [filterBranch, setFilterBranch] = useState('');
 //   const [pendingFilterName, setPendingFilterName] = useState('');
 //   const [attendanceFilterName, setAttendanceFilterName] = useState('');
+//   const [deleteUserId, setDeleteUserId] = useState(null);
+//   const [formErrors, setFormErrors] = useState({});
 //   const navigate = useNavigate();
-//   const lang = document.documentElement.getAttribute('lang') || 'en';
+
+//   // Days of the week for checkboxes
+//   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 //   // Initialize Bootstrap Toast
 //   useEffect(() => {
@@ -739,126 +47,21 @@
 //     }
 //   }, [error, success]);
 
-//   const translations = {
-//     en: {
-//       dashboard: 'Admin Dashboard',
-//       employees: 'Employees',
-//       name: 'Name',
-//       email: 'Email',
-//       branch: 'Branch',
-//       checkIn: 'Check-In',
-//       checkOut: 'Check-Out',
-//       date: 'Date',
-//       day: 'Day',
-//       status: 'Status',
-//       viewProfile: 'View Profile',
-//       selectBranch: 'Select Branch',
-//       selectDate: 'Select Date',
-//       allBranches: 'All Branches',
-//       error: 'An error occurred',
-//       previous: 'Previous',
-//       next: 'Next',
-//       page: 'Page',
-//       edit: 'Edit',
-//       delete: 'Delete',
-//       save: 'Save',
-//       cancel: 'Cancel',
-//       role: 'Role',
-//       phone: 'Phone',
-//       address: 'Address',
-//       salary: 'Salary',
-//       requiredWorkingDays: 'Required Working Days',
-//       workingDaysNames: 'Working Days Names',
-//       workingHoursPerDay: 'Working Hours Per Day',
-//       workStartTime: 'Work Start Time',
-//       workEndTime: 'Work End Time',
-//       absenceDeductionRate: 'Absence Deduction Rate (%)',
-//       lateDeductionRate: 'Late Deduction Rate (%)',
-//       earlyLeaveDeductionRate: 'Early Leave Deduction Rate (%)',
-//       allowRemoteAbsence: 'Allow Remote Absence',
-//       addEmployee: 'Add Employee',
-//       totalSalaries: 'Total Salaries',
-//       calculateSalaries: 'Calculate Salaries for Month',
-//       year: 'Year',
-//       month: 'Month',
-//       total: 'Total Salaries',
-//       branchTotal: 'Branch Total',
-//       noData: 'No data available',
-//       active: 'Active',
-//       resendActivation: 'Resend Activation',
-//       resendSuccess: 'Activation email resent',
-//       confirmDelete: 'Are you sure you want to delete this user?',
-//       attendance: 'Attendance',
-//       attendanceFilters: 'Attendance Filters',
-//     },
-//     ar: {
-//       dashboard: 'لوحة تحكم الإدارة',
-//       employees: 'الموظفون',
-//       name: 'الاسم',
-//       email: 'البريد الإلكتروني',
-//       branch: 'الفرع',
-//       checkIn: 'تسجيل الدخول',
-//       checkOut: 'تسجيل الخروج',
-//       date: 'التاريخ',
-//       day: 'اليوم',
-//       status: 'الحالة',
-//       viewProfile: 'عرض الملف الشخصي',
-//       selectBranch: 'اختر الفرع',
-//       selectDate: 'اختر التاريخ',
-//       allBranches: 'جميع الفروع',
-//       error: 'حدث خطأ',
-//       previous: 'السابق',
-//       next: 'التالي',
-//       page: 'الصفحة',
-//       edit: 'تعديل',
-//       delete: 'حذف',
-//       save: 'حفظ',
-//       cancel: 'إلغاء',
-//       role: 'الدور',
-//       phone: 'الهاتف',
-//       address: 'العنوان',
-//       salary: 'الراتب',
-//       requiredWorkingDays: 'أيام العمل المطلوبة',
-//       workingDaysNames: 'أسماء أيام العمل',
-//       workingHoursPerDay: 'ساعات العمل في اليوم',
-//       workStartTime: 'وقت بداية العمل',
-//       workEndTime: 'وقت نهاية العمل',
-//       absenceDeductionRate: 'نسبة خصم الغياب (%)',
-//       lateDeductionRate: 'نسبة خصم التأخير (%)',
-//       earlyLeaveDeductionRate: 'نسبة خصم المغادرة المبكرة (%)',
-//       allowRemoteAbsence: 'السماح بتسجيل الغياب عن بعد',
-//       addEmployee: 'إضافة موظف',
-//       totalSalaries: 'إجمالي المرتبات',
-//       calculateSalaries: 'حساب المرتبات للشهر',
-//       year: 'السنة',
-//       month: 'الشهر',
-//       total: 'إجمالي المرتبات',
-//       branchTotal: 'إجمالي الفرع',
-//       noData: 'لا توجد بيانات',
-//       active: 'مفعل',
-//       resendActivation: 'إعادة إرسال التفعيل',
-//       resendSuccess: 'تم إعادة إرسال إيميل التفعيل',
-//       confirmDelete: 'هل أنت متأكد من حذف هذا المستخدم؟',
-//       attendance: 'الحضور',
-//       attendanceFilters: 'فلاتر الحضور',
-//     },
-//   };
-
 //   useEffect(() => {
 //     const fetchPending = async () => {
 //       try {
 //         const params = new URLSearchParams();
 //         params.append('page', pendingPage);
-//         if (pendingFilterName) params.append('name', encodeURIComponent(pendingFilterName));
+//         if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterName));
 //         const res = await apiGet(`/users/pending-devices?${params.toString()}`);
 //         setPendingDevices(res.data.pendingDevices || []);
 //         setPendingPages(res.data.pagination?.pages || 1);
 //       } catch (err) {
-//         setError(translations[lang].error);
+//         setError(t('error'));
 //       }
 //     };
 //     fetchPending();
-//   }, [pendingPage, pendingFilterName, lang]);
+//   }, [pendingPage, pendingFilterName, t]);
 
 //   useEffect(() => {
 //     const fetchData = async () => {
@@ -875,11 +78,11 @@
 //         setTotalPages(userRes.data.totalPages || 1);
 //         handleAttendanceFilter();
 //       } catch (err) {
-//         setError(translations[lang].error);
+//         setError(t('error'));
 //       }
 //     };
 //     fetchData();
-//   }, [currentPage, filterName, filterBranch, lang]);
+//   }, [currentPage, filterName, filterBranch, t]);
 
 //   const handleAttendanceFilter = async () => {
 //     try {
@@ -892,7 +95,7 @@
 //       const attendanceRes = await apiGet(`/admin/attendance?${params.toString()}`);
 //       setAttendance(attendanceRes.data || []);
 //     } catch (err) {
-//       setError(translations[lang].error);
+//       setError(t('error'));
 //     }
 //   };
 
@@ -913,44 +116,91 @@
 //   const handleEdit = (user) => {
 //     setEditUser({
 //       ...user,
-//       branches: user.branches.map(b => b._id),
-//       workingDaysNames: Array.isArray(user.workingDaysNames)
-//         ? user.workingDaysNames.join(',')
-//         : user.workingDaysNames || '',
+//       branches: Array.isArray(user.branches) ? user.branches.map(b => b._id) : [],
+//       workingDaysNames: Array.isArray(user.workingDaysNames) ? user.workingDaysNames : (user.workingDaysNames ? user.workingDaysNames.split(',') : []),
 //       absenceDeductionRate: user.absenceDeductionRate * 100,
 //       lateDeductionRate: user.lateDeductionRate * 100,
 //       earlyLeaveDeductionRate: user.earlyLeaveDeductionRate * 100,
+//       workStartTime: user.workStartTime || '',
+//       workEndTime: user.workEndTime || '',
+//       isNightShift: user.isNightShift || false,
 //     });
+//     setFormErrors({});
 //   };
 
 //   const handleDelete = async (id) => {
-//     if (window.confirm(translations[lang].confirmDelete)) {
-//       try {
-//         await apiDelete(`/users/${id}`);
-//         const params = new URLSearchParams();
-//         params.append('page', currentPage);
-//         params.append('limit', itemsPerPage);
-//         if (filterName) params.append('name', encodeURIComponent(filterName));
-//         if (filterBranch) params.append('branch', filterBranch);
-//         const userRes = await apiGet(`/users?${params.toString()}`);
-//         setEmployees(userRes.data.users || []);
-//         setTotalPages(userRes.data.totalPages || 1);
-//         setSuccess('User deleted');
-//       } catch (err) {
-//         setError(err.response?.data?.message || translations[lang].error);
-//       }
+//     setDeleteUserId(id);
+//   };
+
+//   const confirmDelete = async () => {
+//     try {
+//       await apiDelete(`/users/${deleteUserId}`);
+//       const params = new URLSearchParams();
+//       params.append('page', currentPage);
+//       params.append('limit', itemsPerPage);
+//       if (filterName) params.append('name', encodeURIComponent(filterName));
+//       if (filterBranch) params.append('branch', filterBranch);
+//       const userRes = await apiGet(`/users?${params.toString()}`);
+//       setEmployees(userRes.data.users || []);
+//       setTotalPages(userRes.data.totalPages || 1);
+//       setSuccess(t('success'));
+//       setDeleteUserId(null);
+//     } catch (err) {
+//       setError(err.response?.data?.message || t('error'));
+//       setDeleteUserId(null);
 //     }
 //   };
 
+//   const validateForm = () => {
+//     const errors = {};
+//     if (!editUser.name) errors.name = t('nameRequired');
+//     if (!editUser.email) errors.email = t('emailRequired');
+//     if (!editUser.workingDaysNames.length) errors.workingDaysNames = t('workingDaysRequired');
+//     if (!editUser.workStartTime || !editUser.workEndTime) {
+//       errors.time = t('timeRequired');
+//     } else {
+//       const startTime = editUser.workStartTime.split(':').map(Number);
+//       const endTime = editUser.workEndTime.split(':').map(Number);
+//       const startMinutes = startTime[0] * 60 + startTime[1];
+//       const endMinutes = endTime[0] * 60 + endTime[1];
+//       if (!editUser.isNightShift && endMinutes <= startMinutes) {
+//         errors.time = t('endTimeAfterStart');
+//       }
+//     }
+//     if (!editUser.branches.length) errors.branches = t('branchesRequired');
+//     if (!editUser.salary || editUser.salary <= 0) errors.salary = t('salaryRequired');
+//     if (!editUser.requiredWorkingDays || editUser.requiredWorkingDays <= 0) {
+//       errors.requiredWorkingDays = t('requiredWorkingDaysRequired');
+//     }
+//     if (!editUser.workingHoursPerDay || editUser.workingHoursPerDay <= 0) {
+//       errors.workingHoursPerDay = t('workingHoursRequired');
+//     }
+//     return errors;
+//   };
+
+//   const formatTime = (time) => {
+//     if (!time) return '';
+//     const [hours, minutes] = time.split(':').map(Number);
+//     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+//   };
+
 //   const handleSave = async () => {
+//     const errors = validateForm();
+//     if (Object.keys(errors).length > 0) {
+//       setFormErrors(errors);
+//       return;
+//     }
 //     try {
 //       const dataToSend = {
 //         ...editUser,
-//         workingDaysNames: editUser.workingDaysNames,
+//         workingDaysNames: editUser.workingDaysNames.join(','), // تحويل array إلى string
 //         branches: editUser.branches,
 //         absenceDeductionRate: editUser.absenceDeductionRate / 100,
 //         lateDeductionRate: editUser.lateDeductionRate / 100,
 //         earlyLeaveDeductionRate: editUser.earlyLeaveDeductionRate / 100,
+//         isNightShift: editUser.isNightShift,
+//         workStartTime: formatTime(editUser.workStartTime),
+//         workEndTime: formatTime(editUser.workEndTime),
 //       };
 //       await apiPut(`/users/${editUser._id}`, dataToSend);
 //       const params = new URLSearchParams();
@@ -962,11 +212,32 @@
 //       setEmployees(userRes.data.users || []);
 //       setTotalPages(userRes.data.totalPages || 1);
 //       setEditUser(null);
-//       setSuccess('User updated successfully');
+//       setSuccess(t('success'));
+//       setFormErrors({});
 //     } catch (err) {
 //       console.error('Update error:', err.response?.data);
-//       setError(translations[lang].error + ': ' + (err.response?.data?.message || err.message));
+//       setError(t('error') + ': ' + (err.response?.data?.message || err.message));
 //     }
+//   };
+
+//   const handleDayChange = (day) => {
+//     setEditUser((prev) => {
+//       const workingDaysNames = prev.workingDaysNames.includes(day)
+//         ? prev.workingDaysNames.filter((d) => d !== day)
+//         : [...prev.workingDaysNames, day];
+//       return { ...prev, workingDaysNames };
+//     });
+//     setFormErrors((prev) => ({ ...prev, workingDaysNames: '' }));
+//   };
+
+//   const handleBranchChange = (branchId) => {
+//     setEditUser((prev) => {
+//       const branches = prev.branches.includes(branchId)
+//         ? prev.branches.filter((id) => id !== branchId)
+//         : [...prev.branches, branchId];
+//       return { ...prev, branches };
+//     });
+//     setFormErrors((prev) => ({ ...prev, branches: '' }));
 //   };
 
 //   const handleAddEmployee = async () => {
@@ -978,16 +249,16 @@
 //       const res = await apiGet(`/admin/total-salaries?year=${year}&month=${month}${selectedBranch ? `&branchId=${selectedBranch}` : ''}`);
 //       setTotalSalaries(res.data);
 //     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
+//       setError(err.response?.data?.message || t('error'));
 //     }
 //   };
 
 //   const handleResendActivation = async (userId) => {
 //     try {
 //       await apiPost(`/auth/resend-activation/${userId}`, { userId });
-//       setSuccess(translations[lang].resendSuccess);
+//       setSuccess(t('resendSuccess'));
 //     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
+//       setError(err.response?.data?.message || t('error'));
 //     }
 //   };
 
@@ -1000,9 +271,9 @@
 //       const res = await apiGet(`/users/pending-devices?${params.toString()}`);
 //       setPendingDevices(res.data.pendingDevices || []);
 //       setPendingPages(res.data.pagination?.pages || 1);
-//       setSuccess('Device approved successfully');
+//       setSuccess(t('success'));
 //     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
+//       setError(err.response?.data?.message || t('error'));
 //     }
 //   };
 
@@ -1015,9 +286,9 @@
 //       const res = await apiGet(`/users/pending-devices?${params.toString()}`);
 //       setPendingDevices(res.data.pendingDevices || []);
 //       setPendingPages(res.data.pagination?.pages || 1);
-//       setSuccess('Device rejected successfully');
+//       setSuccess(t('success'));
 //     } catch (err) {
-//       setError(err.response?.data?.message || translations[lang].error);
+//       setError(err.response?.data?.message || t('error'));
 //     }
 //   };
 
@@ -1037,44 +308,84 @@
 
 //   return (
 //     <div className="container-fluid dashboard-container">
-//       <h2 className="dashboard-title"><i className="fas fa-tachometer-alt me-2"></i>{translations[lang].dashboard}</h2>
+//       <h2 className="dashboard-title"><i className="fas fa-tachometer-alt me-2"></i>{t('dashboard')}</h2>
 
 //       {/* Toast Container */}
-//       <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
-//         {error && (
-//           <div className="toast align-items-center text-white bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-//             <div className="d-flex">
-//               <div className="toast-body">
-//                 <i className="fas fa-exclamation-circle me-2"></i>{error}
-//               </div>
-//               <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={() => setError('')}></button>
+//       <div className="toast-container position-fixed top-0 end-0 p-3">
+//         {success && (
+//           <div className="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+//             <div className="toast-header bg-success text-white">
+//               <i className="fas fa-check-circle me-2"></i>
+//               <strong className="me-auto">{t('success')}</strong>
+//               <button type="button" className="btn-close btn-close-white" onClick={() => setSuccess('')}></button>
 //             </div>
+//             <div className="toast-body">{success}</div>
 //           </div>
 //         )}
-//         {success && (
-//           <div className="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-//             <div className="d-flex">
-//               <div className="toast-body">
-//                 <i className="fas fa-check-circle me-2"></i>{success}
-//               </div>
-//               <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={() => setSuccess('')}></button>
+//         {error && (
+//           <div className="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+//             <div className="toast-header bg-danger text-white">
+//               <i className="fas fa-exclamation-triangle me-2"></i>
+//               <strong className="me-auto">{t('error')}</strong>
+//               <button type="button" className="btn-close btn-close-white" onClick={() => setError('')}></button>
 //             </div>
+//             <div className="toast-body">{error}</div>
 //           </div>
 //         )}
 //       </div>
 
+//       {/* Delete Confirmation Modal */}
+//       {deleteUserId && (
+//         <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" role="dialog">
+//           <div className="modal-dialog modal-dialog-centered" role="document">
+//             <div className="modal-content delete-modal">
+//               <div className="modal-header bg-danger text-white">
+//                 <h5 className="modal-title">
+//                   <i className="fas fa-exclamation-triangle me-2"></i>{t('delete')} {t('user')}
+//                 </h5>
+//                 <button
+//                   type="button"
+//                   className="btn-close btn-close-white"
+//                   onClick={() => setDeleteUserId(null)}
+//                   aria-label="Close"
+//                 ></button>
+//               </div>
+//               <div className="modal-body">
+//                 <p>{t('confirmDelete')}</p>
+//               </div>
+//               <div className="modal-footer">
+//                 <button
+//                   type="button"
+//                   className="btn btn-success"
+//                   onClick={confirmDelete}
+//                 >
+//                   <i className="fas fa-check me-2"></i>{t('delete')}
+//                 </button>
+//                 <button
+//                   type="button"
+//                   className="btn btn-danger"
+//                   onClick={() => setDeleteUserId(null)}
+//                 >
+//                   <i className="fas fa-times me-2"></i>{t('cancel')}
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
 //       <div className="card shadow-sm mb-4">
 //         <div className="card-body">
-//           <h3 className="card-title"><i className="fas fa-users me-2"></i>{translations[lang].employees}</h3>
+//           <h3 className="card-title"><i className="fas fa-users me-2"></i>{t('employees')}</h3>
 //           <button className="btn btn-primary mb-3" onClick={handleAddEmployee}>
-//             <i className="fas fa-user-plus me-2"></i>{translations[lang].addEmployee}
+//             <i className="fas fa-user-plus me-2"></i>{t('addEmployee')}
 //           </button>
 //           <div className="row mb-3">
 //             <div className="col-md-6">
 //               <input
 //                 type="text"
 //                 className="form-control"
-//                 placeholder={translations[lang].name}
+//                 placeholder={t('name')}
 //                 value={filterName}
 //                 onChange={(e) => { setFilterName(e.target.value); setCurrentPage(1); }}
 //               />
@@ -1085,7 +396,7 @@
 //                 value={filterBranch}
 //                 onChange={(e) => { setFilterBranch(e.target.value); setCurrentPage(1); }}
 //               >
-//                 <option value="">{translations[lang].allBranches}</option>
+//                 <option value="">{t('allBranches')}</option>
 //                 {branches.map((branch) => (
 //                   <option key={branch._id} value={branch._id}>
 //                     {branch.name}
@@ -1098,17 +409,17 @@
 //             <table className="table table-hover">
 //               <thead className="table-primary">
 //                 <tr>
-//                   <th>{translations[lang].name}</th>
-//                   <th>{translations[lang].email}</th>
-//                   <th>{translations[lang].branch}</th>
-//                   <th>{translations[lang].active}</th>
-//                   <th>{translations[lang].actions}</th>
+//                   <th>{t('name')}</th>
+//                   <th>{t('email')}</th>
+//                   <th>{t('branch')}</th>
+//                   <th>{t('active')}</th>
+//                   <th>{t('actions')}</th>
 //                 </tr>
 //               </thead>
 //               <tbody>
 //                 {employees.length === 0 ? (
 //                   <tr>
-//                     <td colSpan="5">{translations[lang].noData}</td>
+//                     <td colSpan="5">{t('noData')}</td>
 //                   </tr>
 //                 ) : (
 //                   employees.map((emp) => (
@@ -1118,9 +429,9 @@
 //                       <td>{emp.branches.map(b => b.name).join(', ')}</td>
 //                       <td>
 //                         {emp.isActive ? (
-//                           <span className="badge bg-success">{translations[lang].active}</span>
+//                           <span className="badge bg-success">{t('active')}</span>
 //                         ) : (
-//                           <span className="badge bg-secondary">Inactive</span>
+//                           <span className="badge bg-secondary">{t('inactive')}</span>
 //                         )}
 //                       </td>
 //                       <td>
@@ -1128,20 +439,20 @@
 //                           className="btn btn-sm btn-info me-1"
 //                           onClick={() => navigate(`/profile/${emp._id}`)}
 //                         >
-//                           <i className="fas fa-eye"></i> {translations[lang].viewProfile}
+//                           <i className="fas fa-eye"></i> {t('viewProfile')}
 //                         </button>
 //                         <button className="btn btn-sm btn-warning me-1" onClick={() => handleEdit(emp)}>
-//                           <i className="fas fa-edit"></i> {translations[lang].edit}
+//                           <i className="fas fa-edit"></i> {t('edit')}
 //                         </button>
 //                         <button className="btn btn-sm btn-danger me-1" onClick={() => handleDelete(emp._id)}>
-//                           <i className="fas fa-trash"></i> {translations[lang].delete}
+//                           <i className="fas fa-trash"></i> {t('delete')}
 //                         </button>
 //                         {!emp.isActive && (
 //                           <button
 //                             className="btn btn-sm btn-secondary"
 //                             onClick={() => handleResendActivation(emp._id)}
 //                           >
-//                             <i className="fas fa-envelope"></i> {translations[lang].resendActivation}
+//                             <i className="fas fa-envelope"></i> {t('resendActivation')}
 //                           </button>
 //                         )}
 //                       </td>
@@ -1159,7 +470,7 @@
 //                   onClick={() => paginate(currentPage - 1)}
 //                   disabled={currentPage === 1}
 //                 >
-//                   <i className="fas fa-chevron-left"></i> {translations[lang].previous}
+//                   <i className="fas fa-chevron-left"></i> {t('previous')}
 //                 </button>
 //               </li>
 //               <li className="page-item disabled">
@@ -1171,7 +482,7 @@
 //                   onClick={() => paginate(currentPage + 1)}
 //                   disabled={currentPage >= totalPages}
 //                 >
-//                   {translations[lang].next} <i className="fas fa-chevron-right"></i>
+//                   {t('next')} <i className="fas fa-chevron-right"></i>
 //                 </button>
 //               </li>
 //             </ul>
@@ -1181,13 +492,13 @@
 
 //       <div className="card shadow-sm mb-4">
 //         <div className="card-body">
-//           <h3 className="card-title"><i className="fas fa-mobile-alt me-2"></i>Pending Devices</h3>
+//           <h3 className="card-title"><i className="fas fa-mobile-alt me-2"></i>{t('pendingDevices')}</h3>
 //           <div className="row mb-3">
 //             <div className="col-md-12">
 //               <input
 //                 type="text"
 //                 className="form-control"
-//                 placeholder={`${translations[lang].name} or ${translations[lang].email}`}
+//                 placeholder={`${t('name')} or ${t('email')}`}
 //                 value={pendingFilterName}
 //                 onChange={(e) => { setPendingFilterName(e.target.value); setPendingPage(1); }}
 //               />
@@ -1197,17 +508,17 @@
 //             <table className="table table-hover">
 //               <thead className="table-primary">
 //                 <tr>
-//                   <th>{translations[lang].name}</th>
-//                   <th>{translations[lang].email}</th>
-//                   <th>{translations[lang].branch}</th>
-//                   <th>Device</th>
-//                   <th>{translations[lang].actions}</th>
+//                   <th>{t('name')}</th>
+//                   <th>{t('email')}</th>
+//                   <th>{t('branch')}</th>
+//                   <th>{t('device')}</th>
+//                   <th>{t('actions')}</th>
 //                 </tr>
 //               </thead>
 //               <tbody>
 //                 {pendingDevices.length === 0 ? (
 //                   <tr>
-//                     <td colSpan="5">{translations[lang].noData}</td>
+//                     <td colSpan="5">{t('noData')}</td>
 //                   </tr>
 //                 ) : (
 //                   pendingDevices.map((d) => (
@@ -1221,13 +532,13 @@
 //                           className="btn btn-sm btn-success me-1"
 //                           onClick={() => handleApprove(d.userId, d.deviceFingerprint)}
 //                         >
-//                           <i className="fas fa-check"></i> Approve
+//                           <i className="fas fa-check"></i> {t('approve')}
 //                         </button>
 //                         <button
 //                           className="btn btn-sm btn-danger"
 //                           onClick={() => handleReject(d.userId, d.deviceFingerprint)}
 //                         >
-//                           <i className="fas fa-times"></i> Reject
+//                           <i className="fas fa-times"></i> {t('reject')}
 //                         </button>
 //                       </td>
 //                     </tr>
@@ -1244,7 +555,7 @@
 //                   onClick={() => setPendingPage(p => p - 1)}
 //                   disabled={pendingPage === 1}
 //                 >
-//                   <i className="fas fa-chevron-left"></i> {translations[lang].previous}
+//                   <i className="fas fa-chevron-left"></i> {t('previous')}
 //                 </button>
 //               </li>
 //               <li className="page-item disabled">
@@ -1256,7 +567,7 @@
 //                   onClick={() => setPendingPage(p => p + 1)}
 //                   disabled={pendingPage >= pendingPages}
 //                 >
-//                   {translations[lang].next} <i className="fas fa-chevron-right"></i>
+//                   {t('next')} <i className="fas fa-chevron-right"></i>
 //                 </button>
 //               </li>
 //             </ul>
@@ -1269,63 +580,65 @@
 //           <div className="modal-dialog modal-lg" role="document">
 //             <div className="modal-content">
 //               <div className="modal-header">
-//                 <h5 className="modal-title"><i className="fas fa-user-edit me-2"></i>{translations[lang].edit} {editUser.name}</h5>
+//                 <h5 className="modal-title"><i className="fas fa-user-edit me-2"></i>{t('edit')} {editUser.name}</h5>
 //                 <button type="button" className="btn-close" onClick={() => setEditUser(null)} aria-label="Close"></button>
 //               </div>
 //               <div className="modal-body">
 //                 <form>
 //                   <div className="row">
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].name}</label>
+//                       <label className="form-label">{t('name')}</label>
 //                       <input
 //                         type="text"
-//                         className="form-control"
+//                         className={`form-control ${formErrors.name ? 'is-invalid' : ''}`}
 //                         value={editUser.name}
 //                         onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
 //                       />
+//                       {formErrors.name && <div className="invalid-feedback">{formErrors.name}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].email}</label>
+//                       <label className="form-label">{t('email')}</label>
 //                       <input
 //                         type="email"
-//                         className="form-control"
+//                         className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
 //                         value={editUser.email}
 //                         onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
 //                       />
+//                       {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].role}</label>
+//                       <label className="form-label">{t('role')}</label>
 //                       <select
 //                         className="form-select"
 //                         value={editUser.role}
 //                         onChange={(e) => setEditUser({ ...editUser, role: e.target.value })}
 //                       >
-//                         <option value="staff">Staff</option>
-//                         <option value="admin">Admin</option>
+//                         <option value="staff">{t('staff')}</option>
+//                         <option value="admin">{t('admin')}</option>
 //                       </select>
 //                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].branches}</label>
-//                       <select
-//                         multiple
-//                         className="form-select"
-//                         value={editUser.branches}
-//                         onChange={(e) =>
-//                           setEditUser({
-//                             ...editUser,
-//                             branches: Array.from(e.target.selectedOptions, (option) => option.value),
-//                           })
-//                         }
-//                       >
+//                     <div className="col-md-12 mb-3">
+//                       <label className="form-label">{t('branches')}</label>
+//                       <div className="checkbox-group">
 //                         {branches.map((branch) => (
-//                           <option key={branch._id} value={branch._id}>
-//                             {branch.name}
-//                           </option>
+//                           <div key={branch._id} className="form-check form-check-inline">
+//                             <input
+//                               type="checkbox"
+//                               className="form-check-input"
+//                               id={`edit-branch-${branch._id}`}
+//                               checked={editUser.branches.includes(branch._id)}
+//                               onChange={() => handleBranchChange(branch._id)}
+//                             />
+//                             <label className="form-check-label" htmlFor={`edit-branch-${branch._id}`}>
+//                               {branch.name}
+//                             </label>
+//                           </div>
 //                         ))}
-//                       </select>
+//                       </div>
+//                       {formErrors.branches && <div className="text-danger">{formErrors.branches}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].phone}</label>
+//                       <label className="form-label">{t('phone')}</label>
 //                       <input
 //                         type="text"
 //                         className="form-control"
@@ -1334,7 +647,7 @@
 //                       />
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].address}</label>
+//                       <label className="form-label">{t('address')}</label>
 //                       <input
 //                         type="text"
 //                         className="form-control"
@@ -1343,61 +656,77 @@
 //                       />
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].salary}</label>
+//                       <label className="form-label">{t('salary')}</label>
 //                       <input
 //                         type="number"
-//                         className="form-control"
+//                         className={`form-control ${formErrors.salary ? 'is-invalid' : ''}`}
 //                         value={editUser.salary || ''}
 //                         onChange={(e) => setEditUser({ ...editUser, salary: e.target.value })}
 //                       />
+//                       {formErrors.salary && <div className="invalid-feedback">{formErrors.salary}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].requiredWorkingDays}</label>
+//                       <label className="form-label">{t('requiredWorkingDays')}</label>
 //                       <input
 //                         type="number"
-//                         className="form-control"
+//                         className={`form-control ${formErrors.requiredWorkingDays ? 'is-invalid' : ''}`}
 //                         value={editUser.requiredWorkingDays}
 //                         onChange={(e) => setEditUser({ ...editUser, requiredWorkingDays: e.target.value })}
 //                       />
+//                       {formErrors.requiredWorkingDays && <div className="invalid-feedback">{formErrors.requiredWorkingDays}</div>}
+//                     </div>
+//                     <div className="col-md-12 mb-3">
+//                       <label className="form-label">{t('workingDaysNames')}</label>
+//                       <div className="checkbox-group">
+//                         {daysOfWeek.map((day) => (
+//                           <div key={day} className="form-check form-check-inline">
+//                             <input
+//                               type="checkbox"
+//                               className="form-check-input"
+//                               id={`edit-day-${day}`}
+//                               checked={editUser.workingDaysNames.includes(day)}
+//                               onChange={() => handleDayChange(day)}
+//                             />
+//                             <label className="form-check-label" htmlFor={`edit-day-${day}`}>
+//                               {t(day.toLowerCase())}
+//                             </label>
+//                           </div>
+//                         ))}
+//                       </div>
+//                       {formErrors.workingDaysNames && <div className="text-danger">{formErrors.workingDaysNames}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].workingDaysNames} (comma-separated)</label>
-//                       <input
-//                         type="text"
-//                         className="form-control"
-//                         value={editUser.workingDaysNames}
-//                         onChange={(e) => setEditUser({ ...editUser, workingDaysNames: e.target.value })}
-//                       />
-//                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].workingHoursPerDay}</label>
+//                       <label className="form-label">{t('workingHoursPerDay')}</label>
 //                       <input
 //                         type="number"
-//                         className="form-control"
+//                         className={`form-control ${formErrors.workingHoursPerDay ? 'is-invalid' : ''}`}
 //                         value={editUser.workingHoursPerDay}
 //                         onChange={(e) => setEditUser({ ...editUser, workingHoursPerDay: e.target.value })}
 //                       />
+//                       {formErrors.workingHoursPerDay && <div className="invalid-feedback">{formErrors.workingHoursPerDay}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].workStartTime} (HH:MM)</label>
+//                       <label className="form-label">{t('workStartTime')}</label>
 //                       <input
-//                         type="text"
-//                         className="form-control"
-//                         value={editUser.workStartTime || ''}
+//                         type="time"
+//                         className={`form-control ${formErrors.time ? 'is-invalid' : ''}`}
+//                         value={editUser.workStartTime}
 //                         onChange={(e) => setEditUser({ ...editUser, workStartTime: e.target.value })}
 //                       />
+//                       {formErrors.time && <div className="invalid-feedback">{formErrors.time}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].workEndTime} (HH:MM)</label>
+//                       <label className="form-label">{t('workEndTime')}</label>
 //                       <input
-//                         type="text"
-//                         className="form-control"
-//                         value={editUser.workEndTime || ''}
+//                         type="time"
+//                         className={`form-control ${formErrors.time ? 'is-invalid' : ''}`}
+//                         value={editUser.workEndTime}
 //                         onChange={(e) => setEditUser({ ...editUser, workEndTime: e.target.value })}
 //                       />
+//                       {formErrors.time && <div className="invalid-feedback">{formErrors.time}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].absenceDeductionRate}</label>
+//                       <label className="form-label">{t('absenceDeductionRate')}</label>
 //                       <input
 //                         type="number"
 //                         className="form-control"
@@ -1406,7 +735,7 @@
 //                       />
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].lateDeductionRate}</label>
+//                       <label className="form-label">{t('lateDeductionRate')}</label>
 //                       <input
 //                         type="number"
 //                         className="form-control"
@@ -1415,7 +744,7 @@
 //                       />
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{translations[lang].earlyLeaveDeductionRate}</label>
+//                       <label className="form-label">{t('earlyLeaveDeductionRate')}</label>
 //                       <input
 //                         type="number"
 //                         className="form-control"
@@ -1430,17 +759,26 @@
 //                         checked={editUser.allowRemoteAbsence}
 //                         onChange={(e) => setEditUser({ ...editUser, allowRemoteAbsence: e.target.checked })}
 //                       />
-//                       <label className="form-check-label">{translations[lang].allowRemoteAbsence}</label>
+//                       <label className="form-check-label">{t('allowRemoteAbsence')}</label>
+//                     </div>
+//                     <div className="col-md-6 mb-3 form-check">
+//                       <input
+//                         type="checkbox"
+//                         className="form-check-input"
+//                         checked={editUser.isNightShift}
+//                         onChange={(e) => setEditUser({ ...editUser, isNightShift: e.target.checked })}
+//                       />
+//                       <label className="form-check-label">{t('isNightShift')}</label>
 //                     </div>
 //                   </div>
 //                 </form>
 //               </div>
 //               <div className="modal-footer">
 //                 <button type="button" className="btn btn-primary" onClick={handleSave}>
-//                   <i className="fas fa-save me-2"></i>{translations[lang].save}
+//                   <i className="fas fa-save me-2"></i>{t('save')}
 //                 </button>
 //                 <button type="button" className="btn btn-secondary" onClick={() => setEditUser(null)}>
-//                   <i className="fas fa-times me-2"></i>{translations[lang].cancel}
+//                   <i className="fas fa-times me-2"></i>{t('cancel')}
 //                 </button>
 //               </div>
 //             </div>
@@ -1450,10 +788,10 @@
 
 //       <div className="card shadow-sm mb-4">
 //         <div className="card-body">
-//           <h3 className="card-title"><i className="fas fa-money-bill-wave me-2"></i>{translations[lang].totalSalaries}</h3>
+//           <h3 className="card-title"><i className="fas fa-money-bill-wave me-2"></i>{t('totalSalaries')}</h3>
 //           <div className="row">
 //             <div className="col-md-3 mb-3">
-//               <label className="form-label">{translations[lang].year}</label>
+//               <label className="form-label">{t('year')}</label>
 //               <input
 //                 type="number"
 //                 className="form-control"
@@ -1462,7 +800,7 @@
 //               />
 //             </div>
 //             <div className="col-md-3 mb-3">
-//               <label className="form-label">{translations[lang].month}</label>
+//               <label className="form-label">{t('month')}</label>
 //               <input
 //                 type="number"
 //                 className="form-control"
@@ -1473,13 +811,13 @@
 //               />
 //             </div>
 //             <div className="col-md-3 mb-3">
-//               <label className="form-label">{translations[lang].selectBranch}</label>
+//               <label className="form-label">{t('selectBranch')}</label>
 //               <select
 //                 className="form-select"
 //                 value={selectedBranch}
 //                 onChange={(e) => setSelectedBranch(e.target.value)}
 //               >
-//                 <option value="">{translations[lang].allBranches}</option>
+//                 <option value="">{t('allBranches')}</option>
 //                 {branches.map((branch) => (
 //                   <option key={branch._id} value={branch._id}>
 //                     {branch.name}
@@ -1489,18 +827,18 @@
 //             </div>
 //             <div className="col-md-3 d-flex align-items-end mb-3">
 //               <button className="btn btn-primary w-100" onClick={handleCalculateSalaries}>
-//                 <i className="fas fa-calculator me-2"></i>{translations[lang].calculateSalaries}
+//                 <i className="fas fa-calculator me-2"></i>{t('calculateSalaries')}
 //               </button>
 //             </div>
 //           </div>
 //           {totalSalaries && (
 //             <div className="mt-3">
-//               <h4>{translations[lang].total}: {totalSalaries.totalSalaries}</h4>
+//               <h4>{t('total')}: {totalSalaries.totalSalaries}</h4>
 //               <table className="table table-bordered mt-2">
 //                 <thead>
 //                   <tr>
-//                     <th>{translations[lang].branch}</th>
-//                     <th>{translations[lang].branchTotal}</th>
+//                     <th>{t('branch')}</th>
+//                     <th>{t('branchTotal')}</th>
 //                   </tr>
 //                 </thead>
 //                 <tbody>
@@ -1522,16 +860,16 @@
 
 //       <div className="card shadow-sm mb-4">
 //         <div className="card-body">
-//           <h3 className="card-title"><i className="fas fa-filter me-2"></i>{translations[lang].attendanceFilters}</h3>
+//           <h3 className="card-title"><i className="fas fa-filter me-2"></i>{t('attendanceFilters')}</h3>
 //           <div className="row">
 //             <div className="col-md-4 mb-3">
-//               <label className="form-label">{translations[lang].selectBranch}</label>
+//               <label className="form-label">{t('selectBranch')}</label>
 //               <select
 //                 className="form-select"
 //                 value={selectedBranch}
 //                 onChange={(e) => handleBranchFilter(e.target.value)}
 //               >
-//                 <option value="">{translations[lang].allBranches}</option>
+//                 <option value="">{t('allBranches')}</option>
 //                 {branches.map((branch) => (
 //                   <option key={branch._id} value={branch._id}>
 //                     {branch.name}
@@ -1540,7 +878,7 @@
 //               </select>
 //             </div>
 //             <div className="col-md-4 mb-3">
-//               <label className="form-label">{translations[lang].selectDate}</label>
+//               <label className="form-label">{t('selectDate')}</label>
 //               <input
 //                 type="date"
 //                 className="form-control"
@@ -1549,7 +887,7 @@
 //               />
 //             </div>
 //             <div className="col-md-4 mb-3">
-//               <label className="form-label">{translations[lang].name}</label>
+//               <label className="form-label">{t('name')}</label>
 //               <input
 //                 type="text"
 //                 className="form-control"
@@ -1563,30 +901,30 @@
 
 //       <div className="card shadow-sm">
 //         <div className="card-body">
-//           <h3 className="card-title"><i className="fas fa-clipboard-check me-2"></i>{translations[lang].attendance}</h3>
+//           <h3 className="card-title"><i className="fas fa-clipboard-check me-2"></i>{t('attendance')}</h3>
 //           <div className="table-responsive">
 //             <table className="table table-hover">
 //               <thead className="table-primary">
 //                 <tr>
-//                   <th>{translations[lang].name}</th>
-//                   <th>{translations[lang].branch}</th>
-//                   <th>{translations[lang].date}</th>
-//                   <th>{translations[lang].day}</th>
-//                   <th>{translations[lang].checkIn}</th>
-//                   <th>{translations[lang].checkOut}</th>
-//                   <th>{translations[lang].status}</th>
+//                   <th>{t('name')}</th>
+//                   <th>{t('branch')}</th>
+//                   <th>{t('date')}</th>
+//                   <th>{t('day')}</th>
+//                   <th>{t('checkIn')}</th>
+//                   <th>{t('checkOut')}</th>
+//                   <th>{t('status')}</th>
 //                 </tr>
 //               </thead>
 //               <tbody>
 //                 {attendance.length === 0 ? (
 //                   <tr>
-//                     <td colSpan="7">{translations[lang].noData}</td>
+//                     <td colSpan="7">{t('noData')}</td>
 //                   </tr>
 //                 ) : (
 //                   attendance.flatMap((record) =>
 //                     record.attendance.length === 0 ? (
 //                       <tr key={record.branch._id}>
-//                         <td colSpan="7">{translations[lang].noData}</td>
+//                         <td colSpan="7">{t('noData')}</td>
 //                       </tr>
 //                     ) : (
 //                       record.attendance.map((att) => {
@@ -1603,7 +941,7 @@
 //                                 ? new Date(att.checkOutTime).toLocaleTimeString()
 //                                 : '-'}
 //                             </td>
-//                             <td>{translations[lang][att.dayStatus] || att.dayStatus}</td>
+//                             <td>{t(att.dayStatus) || att.dayStatus}</td>
 //                           </tr>
 //                         );
 //                       })
@@ -1621,7 +959,7 @@
 //                   onClick={attendancePrev}
 //                   disabled={attendancePage === 1}
 //                 >
-//                   <i className="fas fa-chevron-left"></i> {translations[lang].previous}
+//                   <i className="fas fa-chevron-left"></i> {t('previous')}
 //                 </button>
 //               </li>
 //               <li className="page-item disabled">
@@ -1633,7 +971,7 @@
 //                   onClick={attendanceNext}
 //                   disabled={attendancePage >= attendancePagination.pages}
 //                 >
-//                   {translations[lang].next} <i className="fas fa-chevron-right"></i>
+//                   {t('next')} <i className="fas fa-chevron-right"></i>
 //                 </button>
 //               </li>
 //             </ul>
@@ -1645,6 +983,7 @@
 // };
 
 // export default AdminDashboard;
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -1677,8 +1016,31 @@ const AdminDashboard = () => {
   const [filterBranch, setFilterBranch] = useState('');
   const [pendingFilterName, setPendingFilterName] = useState('');
   const [attendanceFilterName, setAttendanceFilterName] = useState('');
-  const [deleteUserId, setDeleteUserId] = useState(null); // New state for delete confirmation
+  const [deleteUserId, setDeleteUserId] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
   const navigate = useNavigate();
+
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  // Calculate working hours
+  const calculateWorkingHours = (startTime, endTime, isNightShift = false) => {
+    if (!startTime || !endTime) return 0;
+    const [startHour, startMin] = startTime.split(':').map(Number);
+    const [endHour, endMin] = endTime.split(':').map(Number);
+    let startMinutes = startHour * 60 + startMin;
+    let endMinutes = endHour * 60 + endMin;
+    if (isNightShift && endHour < startHour) {
+      endMinutes += 24 * 60;
+    }
+    return Math.max(0, (endMinutes - startMinutes) / 60);
+  };
+
+  // Calculate expected monthly working days
+  const calculateMonthlyWorkingDays = (workingDaysNames) => {
+    if (!workingDaysNames.length) return 0;
+    const weeksPerMonth = 4.33;
+    return Math.round(workingDaysNames.length * weeksPerMonth);
+  };
 
   // Initialize Bootstrap Toast
   useEffect(() => {
@@ -1695,7 +1057,7 @@ const AdminDashboard = () => {
       try {
         const params = new URLSearchParams();
         params.append('page', pendingPage);
-if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterName));
+        if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterName));
         const res = await apiGet(`/users/pending-devices?${params.toString()}`);
         setPendingDevices(res.data.pendingDevices || []);
         setPendingPages(res.data.pagination?.pages || 1);
@@ -1746,6 +1108,22 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
     handleAttendanceFilter();
   }, [selectedBranch, selectedDate, attendancePage, attendanceFilterName]);
 
+  useEffect(() => {
+    if (editUser) {
+      const calculatedHours = calculateWorkingHours(
+        editUser.workStartTime,
+        editUser.workEndTime,
+        editUser.isNightShift
+      );
+      const expectedDays = calculateMonthlyWorkingDays(editUser.workingDaysNames);
+      setEditUser((prev) => ({
+        ...prev,
+        calculatedWorkingHours: calculatedHours,
+        expectedMonthlyWorkingDays: expectedDays,
+      }));
+    }
+  }, [editUser?.workStartTime, editUser?.workEndTime, editUser?.isNightShift, editUser?.workingDaysNames]);
+
   const handleBranchFilter = (branchId) => {
     setSelectedBranch(branchId);
     setAttendancePage(1);
@@ -1759,18 +1137,27 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
   const handleEdit = (user) => {
     setEditUser({
       ...user,
-      branches: user.branches.map(b => b._id),
+      branches: Array.isArray(user.branches) ? user.branches.map((b) => b._id) : [],
       workingDaysNames: Array.isArray(user.workingDaysNames)
-        ? user.workingDaysNames.join(',')
-        : user.workingDaysNames || '',
+        ? user.workingDaysNames
+        : user.workingDaysNames
+        ? user.workingDaysNames.split(',')
+        : [],
       absenceDeductionRate: user.absenceDeductionRate * 100,
       lateDeductionRate: user.lateDeductionRate * 100,
       earlyLeaveDeductionRate: user.earlyLeaveDeductionRate * 100,
+      workStartTime: user.workStartTime || '09:00',
+      workEndTime: user.workEndTime || '17:00',
+      isNightShift: user.isNightShift || false,
+      allowRemoteAbsence: user.allowRemoteAbsence || false,
+      calculatedWorkingHours: user.workingHoursPerDay || 8,
+      expectedMonthlyWorkingDays: user.requiredWorkingDays || 22,
     });
+    setFormErrors({});
   };
 
   const handleDelete = async (id) => {
-    setDeleteUserId(id); // Show the confirmation modal
+    setDeleteUserId(id);
   };
 
   const confirmDelete = async () => {
@@ -1785,22 +1172,70 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
       setEmployees(userRes.data.users || []);
       setTotalPages(userRes.data.totalPages || 1);
       setSuccess(t('success'));
-      setDeleteUserId(null); // Close the modal
+      setDeleteUserId(null);
     } catch (err) {
       setError(err.response?.data?.message || t('error'));
-      setDeleteUserId(null); // Close the modal
+      setDeleteUserId(null);
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!editUser.name) errors.name = t('nameRequired');
+    if (!editUser.email) errors.email = t('emailRequired');
+    if (!editUser.workingDaysNames.length) errors.workingDaysNames = t('workingDaysRequired');
+    if (!editUser.workStartTime || !editUser.workEndTime) {
+      errors.time = t('timeRequired');
+    } else {
+      const calculatedHours = calculateWorkingHours(
+        editUser.workStartTime,
+        editUser.workEndTime,
+        editUser.isNightShift
+      );
+      if (calculatedHours <= 0) {
+        errors.time = editUser.isNightShift ? t('invalidNightShiftTime') : t('endTimeAfterStart');
+      }
+    }
+    if (!editUser.branches.length) errors.branches = t('branchesRequired');
+    if (!editUser.salary || editUser.salary <= 0) errors.salary = t('salaryRequired');
+    if (editUser.absenceDeductionRate < 0 || editUser.absenceDeductionRate > 100) {
+      errors.absenceDeductionRate = t('invalidDeductionRate');
+    }
+    if (editUser.lateDeductionRate < 0 || editUser.lateDeductionRate > 100) {
+      errors.lateDeductionRate = t('invalidDeductionRate');
+    }
+    if (editUser.earlyLeaveDeductionRate < 0 || editUser.earlyLeaveDeductionRate > 100) {
+      errors.earlyLeaveDeductionRate = t('invalidDeductionRate');
+    }
+    return errors;
+  };
+
+  const formatTime = (time) => {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':').map(Number);
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+
   const handleSave = async () => {
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
     try {
       const dataToSend = {
         ...editUser,
-        workingDaysNames: editUser.workingDaysNames,
+        workingDaysNames: editUser.workingDaysNames.join(','),
         branches: editUser.branches,
         absenceDeductionRate: editUser.absenceDeductionRate / 100,
         lateDeductionRate: editUser.lateDeductionRate / 100,
         earlyLeaveDeductionRate: editUser.earlyLeaveDeductionRate / 100,
+        isNightShift: editUser.isNightShift,
+        allowRemoteAbsence: editUser.allowRemoteAbsence,
+        workStartTime: formatTime(editUser.workStartTime),
+        workEndTime: formatTime(editUser.workEndTime),
+        workingHoursPerDay: editUser.calculatedWorkingHours,
+        requiredWorkingDays: editUser.expectedMonthlyWorkingDays,
       };
       await apiPut(`/users/${editUser._id}`, dataToSend);
       const params = new URLSearchParams();
@@ -1813,10 +1248,31 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
       setTotalPages(userRes.data.totalPages || 1);
       setEditUser(null);
       setSuccess(t('success'));
+      setFormErrors({});
     } catch (err) {
       console.error('Update error:', err.response?.data);
       setError(t('error') + ': ' + (err.response?.data?.message || err.message));
     }
+  };
+
+  const handleDayChange = (day) => {
+    setEditUser((prev) => {
+      const workingDaysNames = prev.workingDaysNames.includes(day)
+        ? prev.workingDaysNames.filter((d) => d !== day)
+        : [...prev.workingDaysNames, day];
+      return { ...prev, workingDaysNames };
+    });
+    setFormErrors((prev) => ({ ...prev, workingDaysNames: '' }));
+  };
+
+  const handleBranchChange = (branchId) => {
+    setEditUser((prev) => {
+      const branches = prev.branches.includes(branchId)
+        ? prev.branches.filter((id) => id !== branchId)
+        : [...prev.branches, branchId];
+      return { ...prev, branches };
+    });
+    setFormErrors((prev) => ({ ...prev, branches: '' }));
   };
 
   const handleAddEmployee = async () => {
@@ -1933,18 +1389,10 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                 <p>{t('confirmDelete')}</p>
               </div>
               <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={confirmDelete}
-                >
+                <button type="button" className="btn btn-success" onClick={confirmDelete}>
                   <i className="fas fa-check me-2"></i>{t('delete')}
                 </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => setDeleteUserId(null)}
-                >
+                <button type="button" className="btn btn-danger" onClick={() => setDeleteUserId(null)}>
                   <i className="fas fa-times me-2"></i>{t('cancel')}
                 </button>
               </div>
@@ -1966,14 +1414,20 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                 className="form-control"
                 placeholder={t('name')}
                 value={filterName}
-                onChange={(e) => { setFilterName(e.target.value); setCurrentPage(1); }}
+                onChange={(e) => {
+                  setFilterName(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
             </div>
             <div className="col-md-6">
               <select
                 className="form-select"
                 value={filterBranch}
-                onChange={(e) => { setFilterBranch(e.target.value); setCurrentPage(1); }}
+                onChange={(e) => {
+                  setFilterBranch(e.target.value);
+                  setCurrentPage(1);
+                }}
               >
                 <option value="">{t('allBranches')}</option>
                 {branches.map((branch) => (
@@ -2005,7 +1459,7 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                     <tr key={emp._id}>
                       <td>{emp.name}</td>
                       <td>{emp.email}</td>
-                      <td>{emp.branches.map(b => b.name).join(', ')}</td>
+                      <td>{emp.branches.map((b) => b.name).join(', ')}</td>
                       <td>
                         {emp.isActive ? (
                           <span className="badge bg-success">{t('active')}</span>
@@ -2020,10 +1474,16 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                         >
                           <i className="fas fa-eye"></i> {t('viewProfile')}
                         </button>
-                        <button className="btn btn-sm btn-warning me-1" onClick={() => handleEdit(emp)}>
+                        <button
+                          className="btn btn-sm btn-warning me-1"
+                          onClick={() => handleEdit(emp)}
+                        >
                           <i className="fas fa-edit"></i> {t('edit')}
                         </button>
-                        <button className="btn btn-sm btn-danger me-1" onClick={() => handleDelete(emp._id)}>
+                        <button
+                          className="btn btn-sm btn-danger me-1"
+                          onClick={() => handleDelete(emp._id)}
+                        >
                           <i className="fas fa-trash"></i> {t('delete')}
                         </button>
                         {!emp.isActive && (
@@ -2053,7 +1513,9 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                 </button>
               </li>
               <li className="page-item disabled">
-                <span className="page-link">{currentPage} / {totalPages}</span>
+                <span className="page-link">
+                  {currentPage} / {totalPages}
+                </span>
               </li>
               <li className="page-item">
                 <button
@@ -2079,7 +1541,10 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                 className="form-control"
                 placeholder={`${t('name')} or ${t('email')}`}
                 value={pendingFilterName}
-                onChange={(e) => { setPendingFilterName(e.target.value); setPendingPage(1); }}
+                onChange={(e) => {
+                  setPendingFilterName(e.target.value);
+                  setPendingPage(1);
+                }}
               />
             </div>
           </div>
@@ -2104,7 +1569,7 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                     <tr key={d.deviceFingerprint}>
                       <td>{d.userName}</td>
                       <td>{d.userEmail}</td>
-                      <td>{d.branches?.map(b => b.name).join(', ') || 'N/A'}</td>
+                      <td>{d.branches?.map((b) => b.name).join(', ') || 'N/A'}</td>
                       <td>{d.deviceFingerprint}</td>
                       <td>
                         <button
@@ -2131,19 +1596,21 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
               <li className="page-item">
                 <button
                   className="page-link"
-                  onClick={() => setPendingPage(p => p - 1)}
+                  onClick={() => setPendingPage((p) => p - 1)}
                   disabled={pendingPage === 1}
                 >
                   <i className="fas fa-chevron-left"></i> {t('previous')}
                 </button>
               </li>
               <li className="page-item disabled">
-                <span className="page-link">{pendingPage} / {pendingPages}</span>
+                <span className="page-link">
+                  {pendingPage} / {pendingPages}
+                </span>
               </li>
               <li className="page-item">
                 <button
                   className="page-link"
-                  onClick={() => setPendingPage(p => p + 1)}
+                  onClick={() => setPendingPage((p) => p + 1)}
                   disabled={pendingPage >= pendingPages}
                 >
                   {t('next')} <i className="fas fa-chevron-right"></i>
@@ -2159,29 +1626,39 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
           <div className="modal-dialog modal-lg" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title"><i className="fas fa-user-edit me-2"></i>{t('edit')} {editUser.name}</h5>
-                <button type="button" className="btn-close" onClick={() => setEditUser(null)} aria-label="Close"></button>
+                <h5 className="modal-title">
+                  <i className="fas fa-user-edit me-2"></i>
+                  {t('edit')} {editUser.name}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setEditUser(null)}
+                  aria-label="Close"
+                ></button>
               </div>
               <div className="modal-body">
                 <form>
                   <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('name')}</label>
+                      <label className="form-label">{t('name')} *</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${formErrors.name ? 'is-invalid' : ''}`}
                         value={editUser.name}
                         onChange={(e) => setEditUser({ ...editUser, name: e.target.value })}
                       />
+                      {formErrors.name && <div className="invalid-feedback">{formErrors.name}</div>}
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('email')}</label>
+                      <label className="form-label">{t('email')} *</label>
                       <input
                         type="email"
-                        className="form-control"
+                        className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
                         value={editUser.email}
                         onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
                       />
+                      {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
                     </div>
                     <div className="col-md-6 mb-3">
                       <label className="form-label">{t('role')}</label>
@@ -2195,24 +1672,41 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                       </select>
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('branches')}</label>
-                      <select
-                        multiple
-                        className="form-select"
-                        value={editUser.branches}
-                        onChange={(e) =>
-                          setEditUser({
-                            ...editUser,
-                            branches: Array.from(e.target.selectedOptions, (option) => option.value),
-                          })
-                        }
-                      >
+                      <label className="form-label">{t('salary')} * (شهري)</label>
+                      <input
+                        type="number"
+                        className={`form-control ${formErrors.salary ? 'is-invalid' : ''}`}
+                        value={editUser.salary}
+                        onChange={(e) => setEditUser({ ...editUser, salary: e.target.value })}
+                        min="0"
+                        step="0.01"
+                      />
+                      {formErrors.salary && <div className="invalid-feedback">{formErrors.salary}</div>}
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <label className="form-label">{t('branches')} *</label>
+                      <div className="checkbox-group border p-3 rounded">
                         {branches.map((branch) => (
-                          <option key={branch._id} value={branch._id}>
-                            {branch.name}
-                          </option>
+                          <div key={branch._id} className="form-check form-check-inline">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              id={`edit-branch-${branch._id}`}
+                              checked={editUser.branches.includes(branch._id)}
+                              onChange={() => handleBranchChange(branch._id)}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor={`edit-branch-${branch._id}`}
+                            >
+                              {branch.name}
+                            </label>
+                          </div>
                         ))}
-                      </select>
+                      </div>
+                      {formErrors.branches && (
+                        <div className="text-danger mt-1">{formErrors.branches}</div>
+                      )}
                     </div>
                     <div className="col-md-6 mb-3">
                       <label className="form-label">{t('phone')}</label>
@@ -2232,95 +1726,213 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                         onChange={(e) => setEditUser({ ...editUser, address: e.target.value })}
                       />
                     </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('salary')}</label>
+                    <div className="col-md-12 mb-3">
+                      <label className="form-label">{t('workingDaysNames')} *</label>
+                      <div className="checkbox-group border p-3 rounded">
+                        {daysOfWeek.map((day) => (
+                          <div key={day} className="form-check form-check-inline">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              id={`edit-day-${day}`}
+                              checked={editUser.workingDaysNames.includes(day)}
+                              onChange={() => handleDayChange(day)}
+                            />
+                            <label className="form-check-label" htmlFor={`edit-day-${day}`}>
+                              {t(day.toLowerCase())}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                      {formErrors.workingDaysNames && (
+                        <div className="text-danger mt-1">{formErrors.workingDaysNames}</div>
+                      )}
+                      <small className="text-muted">
+                        الأيام المتوقعة شهرياً: {editUser.expectedMonthlyWorkingDays} يوم
+                      </small>
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label className="form-label">{t('workStartTime')} *</label>
+                      <input
+                        type="time"
+                        className={`form-control ${formErrors.time ? 'is-invalid' : ''}`}
+                        value={editUser.workStartTime}
+                        onChange={(e) =>
+                          setEditUser({ ...editUser, workStartTime: e.target.value })
+                        }
+                      />
+                      {formErrors.time && <div className="invalid-feedback">{formErrors.time}</div>}
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label className="form-label">{t('workEndTime')} *</label>
+                      <input
+                        type="time"
+                        className={`form-control ${formErrors.time ? 'is-invalid' : ''}`}
+                        value={editUser.workEndTime}
+                        onChange={(e) =>
+                          setEditUser({ ...editUser, workEndTime: e.target.value })
+                        }
+                      />
+                      {formErrors.time && <div className="invalid-feedback">{formErrors.time}</div>}
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label className="form-label">ساعات العمل اليومية</label>
                       <input
                         type="number"
                         className="form-control"
-                        value={editUser.salary || ''}
-                        onChange={(e) => setEditUser({ ...editUser, salary: e.target.value })}
+                        value={editUser.calculatedWorkingHours}
+                        disabled
+                        style={{ backgroundColor: '#f8f9fa' }}
                       />
+                      <small className="text-muted">محسوبة تلقائياً</small>
                     </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('requiredWorkingDays')}</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={editUser.requiredWorkingDays}
-                        onChange={(e) => setEditUser({ ...editUser, requiredWorkingDays: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('workingDaysNames')}</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editUser.workingDaysNames}
-                        onChange={(e) => setEditUser({ ...editUser, workingDaysNames: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('workingHoursPerDay')}</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={editUser.workingHoursPerDay}
-                        onChange={(e) => setEditUser({ ...editUser, workingHoursPerDay: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('workStartTime')}</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editUser.workStartTime || ''}
-                        onChange={(e) => setEditUser({ ...editUser, workStartTime: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('workEndTime')}</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editUser.workEndTime || ''}
-                        onChange={(e) => setEditUser({ ...editUser, workEndTime: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('absenceDeductionRate')}</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={editUser.absenceDeductionRate}
-                        onChange={(e) => setEditUser({ ...editUser, absenceDeductionRate: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('lateDeductionRate')}</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={editUser.lateDeductionRate}
-                        onChange={(e) => setEditUser({ ...editUser, lateDeductionRate: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">{t('earlyLeaveDeductionRate')}</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={editUser.earlyLeaveDeductionRate}
-                        onChange={(e) => setEditUser({ ...editUser, earlyLeaveDeductionRate: e.target.value })}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3 form-check">
+                    <div className="mb-3 form-check">
                       <input
                         type="checkbox"
                         className="form-check-input"
-                        checked={editUser.allowRemoteAbsence}
-                        onChange={(e) => setEditUser({ ...editUser, allowRemoteAbsence: e.target.checked })}
+                        id="isNightShift"
+                        checked={editUser.isNightShift}
+                        onChange={(e) =>
+                          setEditUser({ ...editUser, isNightShift: e.target.checked })
+                        }
                       />
-                      <label className="form-check-label">{t('allowRemoteAbsence')}</label>
+                      <label className="form-check-label" htmlFor="isNightShift">
+                        {t('isNightShift')} (العمل عبر منتصف الليل)
+                      </label>
+                    </div>
+                    <div className="card mb-3">
+                      <div className="card-header">
+                        <h5 className="mb-0">معدلات الخصم (%)</h5>
+                      </div>
+                      <div className="card-body">
+                        <div className="row">
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">{t('absenceDeductionRate')} (%)</label>
+                            <input
+                              type="number"
+                              className={`form-control ${
+                                formErrors.absenceDeductionRate ? 'is-invalid' : ''
+                              }`}
+                              value={editUser.absenceDeductionRate}
+                              onChange={(e) =>
+                                setEditUser({
+                                  ...editUser,
+                                  absenceDeductionRate: e.target.value,
+                                })
+                              }
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                            {formErrors.absenceDeductionRate && (
+                              <div className="invalid-feedback">
+                                {formErrors.absenceDeductionRate}
+                              </div>
+                            )}
+                            <small className="text-muted">
+                              نسبة الخصم من الراتب اليومي عن كل يوم غياب
+                            </small>
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">{t('lateDeductionRate')} (%)</label>
+                            <input
+                              type="number"
+                              className={`form-control ${
+                                formErrors.lateDeductionRate ? 'is-invalid' : ''
+                              }`}
+                              value={editUser.lateDeductionRate}
+                              onChange={(e) =>
+                                setEditUser({
+                                  ...editUser,
+                                  lateDeductionRate: e.target.value,
+                                })
+                              }
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                            {formErrors.lateDeductionRate && (
+                              <div className="invalid-feedback">
+                                {formErrors.lateDeductionRate}
+                              </div>
+                            )}
+                            <small className="text-muted">
+                              نسبة الخصم من الراتب الساعي عن كل ساعة تأخير
+                            </small>
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">{t('earlyLeaveDeductionRate')} (%)</label>
+                            <input
+                              type="number"
+                              className={`form-control ${
+                                formErrors.earlyLeaveDeductionRate ? 'is-invalid' : ''
+                              }`}
+                              value={editUser.earlyLeaveDeductionRate}
+                              onChange={(e) =>
+                                setEditUser({
+                                  ...editUser,
+                                  earlyLeaveDeductionRate: e.target.value,
+                                })
+                              }
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                            {formErrors.earlyLeaveDeductionRate && (
+                              <div className="invalid-feedback">
+                                {formErrors.earlyLeaveDeductionRate}
+                              </div>
+                            )}
+                            <small className="text-muted">
+                              نسبة الخصم من الراتب الساعي عن كل ساعة انصراف مبكر
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mb-3 form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="allowRemoteAbsence"
+                        checked={editUser.allowRemoteAbsence}
+                        onChange={(e) =>
+                          setEditUser({ ...editUser, allowRemoteAbsence: e.target.checked })
+                        }
+                      />
+                      <label className="form-check-label" htmlFor="allowRemoteAbsence">
+                        {t('allowRemoteAbsence')}
+                      </label>
+                    </div>
+                    <div className="card mb-3">
+                      <div className="card-header">
+                        <h5 className="mb-0">ملخص الراتب</h5>
+                      </div>
+                      <div className="card-body">
+                        {editUser.salary > 0 && editUser.expectedMonthlyWorkingDays > 0 && (
+                          <div className="row">
+                            <div className="col-md-4">
+                              <strong>الراتب الشهري:</strong> {editUser.salary} جنيه
+                            </div>
+                            <div className="col-md-4">
+                              <strong>الراتب اليومي:</strong>{' '}
+                              {(editUser.salary / editUser.expectedMonthlyWorkingDays).toFixed(2)}{' '}
+                              جنيه
+                            </div>
+                            <div className="col-md-4">
+                              <strong>الراتب الساعي:</strong>{' '}
+                              {editUser.calculatedWorkingHours > 0
+                                ? (
+                                    editUser.salary /
+                                    (editUser.expectedMonthlyWorkingDays *
+                                      editUser.calculatedWorkingHours)
+                                  ).toFixed(2)
+                                : '0'}{' '}
+                              جنيه
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -2444,7 +2056,10 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                 type="text"
                 className="form-control"
                 value={attendanceFilterName}
-                onChange={(e) => { setAttendanceFilterName(e.target.value); setAttendancePage(1); }}
+                onChange={(e) => {
+                  setAttendanceFilterName(e.target.value);
+                  setAttendancePage(1);
+                }}
               />
             </div>
           </div>
@@ -2515,7 +2130,9 @@ if (pendingFilterName) params.append('search', encodeURIComponent(pendingFilterN
                 </button>
               </li>
               <li className="page-item disabled">
-                <span className="page-link">{attendancePage} / {attendancePagination.pages}</span>
+                <span className="page-link">
+                  {attendancePage} / {attendancePagination.pages}
+                </span>
               </li>
               <li className="page-item">
                 <button

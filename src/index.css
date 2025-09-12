@@ -445,6 +445,7 @@ body {
   min-height: 100vh;
   font-family: 'Cairo', 'Inter', sans-serif;
   line-height: 1.6;
+    padding-top: 70px; 
 }
 
 /* تأثيرات الخلفية المتحركة */
