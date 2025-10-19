@@ -54,7 +54,7 @@ function LeaveManagement() {
       if (filters.leaveType) params.append('leaveType', filters.leaveType);
       if (filters.year) params.append('year', filters.year);
 
-      const response = await apiGet(`/leave/my-requests?${params}`);
+const response = await apiGet(`/leave/my?${params}`);
       setLeaveRequests(response.data.requests);
     } catch (error) {
       console.error('خطأ في جلب طلبات الإجازة:', error);
@@ -77,7 +77,7 @@ function LeaveManagement() {
 
   const handleRequestSubmit = async (requestData) => {
     try {
-      await apiPost('/leave/request', requestData);
+await apiPost('/leave', requestData);
       setShowRequestForm(false);
       fetchMyLeaves();
       fetchLeaveBalance();
@@ -89,10 +89,11 @@ function LeaveManagement() {
 
   const handleRequestAction = async (requestId, action, reason = '') => {
     try {
-      await apiPost(`/leave/process/${requestId}`, {
-        action,
-        rejectionReason: reason
-      });
+      await apiPost(`/leave/${requestId}/status`, {
+  status: action === 'approve' ? 'approved' : 'rejected',
+  rejectionReason: reason
+});
+
       
       fetchPendingRequests();
       // إظهار رسالة نجاح
@@ -103,7 +104,7 @@ function LeaveManagement() {
 
   const cancelLeaveRequest = async (requestId) => {
     try {
-      await apiPost(`/leave/cancel/${requestId}`);
+await apiPost(`/leave/${requestId}/status`, { status: 'cancelled' });
       fetchMyLeaves();
       fetchLeaveBalance();
     } catch (error) {
