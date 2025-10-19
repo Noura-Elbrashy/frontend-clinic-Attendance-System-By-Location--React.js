@@ -1,3 +1,4 @@
+
 // import { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // import { useTranslation } from 'react-i18next';
@@ -34,8 +35,27 @@
 //   const [formErrors, setFormErrors] = useState({});
 //   const navigate = useNavigate();
 
-//   // Days of the week for checkboxes
 //   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+//   // Calculate working hours
+//   const calculateWorkingHours = (startTime, endTime, isNightShift = false) => {
+//     if (!startTime || !endTime) return 0;
+//     const [startHour, startMin] = startTime.split(':').map(Number);
+//     const [endHour, endMin] = endTime.split(':').map(Number);
+//     let startMinutes = startHour * 60 + startMin;
+//     let endMinutes = endHour * 60 + endMin;
+//     if (isNightShift && endHour < startHour) {
+//       endMinutes += 24 * 60;
+//     }
+//     return Math.max(0, (endMinutes - startMinutes) / 60);
+//   };
+
+//   // Calculate expected monthly working days
+//   const calculateMonthlyWorkingDays = (workingDaysNames) => {
+//     if (!workingDaysNames.length) return 0;
+//     const weeksPerMonth = 4.33;
+//     return Math.round(workingDaysNames.length * weeksPerMonth);
+//   };
 
 //   // Initialize Bootstrap Toast
 //   useEffect(() => {
@@ -103,6 +123,22 @@
 //     handleAttendanceFilter();
 //   }, [selectedBranch, selectedDate, attendancePage, attendanceFilterName]);
 
+//   useEffect(() => {
+//     if (editUser) {
+//       const calculatedHours = calculateWorkingHours(
+//         editUser.workStartTime,
+//         editUser.workEndTime,
+//         editUser.isNightShift
+//       );
+//       const expectedDays = calculateMonthlyWorkingDays(editUser.workingDaysNames);
+//       setEditUser((prev) => ({
+//         ...prev,
+//         calculatedWorkingHours: calculatedHours,
+//         expectedMonthlyWorkingDays: expectedDays,
+//       }));
+//     }
+//   }, [editUser?.workStartTime, editUser?.workEndTime, editUser?.isNightShift, editUser?.workingDaysNames]);
+
 //   const handleBranchFilter = (branchId) => {
 //     setSelectedBranch(branchId);
 //     setAttendancePage(1);
@@ -116,14 +152,21 @@
 //   const handleEdit = (user) => {
 //     setEditUser({
 //       ...user,
-//       branches: Array.isArray(user.branches) ? user.branches.map(b => b._id) : [],
-//       workingDaysNames: Array.isArray(user.workingDaysNames) ? user.workingDaysNames : (user.workingDaysNames ? user.workingDaysNames.split(',') : []),
+//       branches: Array.isArray(user.branches) ? user.branches.map((b) => b._id) : [],
+//       workingDaysNames: Array.isArray(user.workingDaysNames)
+//         ? user.workingDaysNames
+//         : user.workingDaysNames
+//         ? user.workingDaysNames.split(',')
+//         : [],
 //       absenceDeductionRate: user.absenceDeductionRate * 100,
 //       lateDeductionRate: user.lateDeductionRate * 100,
 //       earlyLeaveDeductionRate: user.earlyLeaveDeductionRate * 100,
-//       workStartTime: user.workStartTime || '',
-//       workEndTime: user.workEndTime || '',
+//       workStartTime: user.workStartTime || '09:00',
+//       workEndTime: user.workEndTime || '17:00',
 //       isNightShift: user.isNightShift || false,
+//       allowRemoteAbsence: user.allowRemoteAbsence || false,
+//       calculatedWorkingHours: user.workingHoursPerDay || 8,
+//       expectedMonthlyWorkingDays: user.requiredWorkingDays || 22,
 //     });
 //     setFormErrors({});
 //   };
@@ -159,21 +202,25 @@
 //     if (!editUser.workStartTime || !editUser.workEndTime) {
 //       errors.time = t('timeRequired');
 //     } else {
-//       const startTime = editUser.workStartTime.split(':').map(Number);
-//       const endTime = editUser.workEndTime.split(':').map(Number);
-//       const startMinutes = startTime[0] * 60 + startTime[1];
-//       const endMinutes = endTime[0] * 60 + endTime[1];
-//       if (!editUser.isNightShift && endMinutes <= startMinutes) {
-//         errors.time = t('endTimeAfterStart');
+//       const calculatedHours = calculateWorkingHours(
+//         editUser.workStartTime,
+//         editUser.workEndTime,
+//         editUser.isNightShift
+//       );
+//       if (calculatedHours <= 0) {
+//         errors.time = editUser.isNightShift ? t('invalidNightShiftTime') : t('endTimeAfterStart');
 //       }
 //     }
 //     if (!editUser.branches.length) errors.branches = t('branchesRequired');
 //     if (!editUser.salary || editUser.salary <= 0) errors.salary = t('salaryRequired');
-//     if (!editUser.requiredWorkingDays || editUser.requiredWorkingDays <= 0) {
-//       errors.requiredWorkingDays = t('requiredWorkingDaysRequired');
+//     if (editUser.absenceDeductionRate < 0 || editUser.absenceDeductionRate > 100) {
+//       errors.absenceDeductionRate = t('invalidDeductionRate');
 //     }
-//     if (!editUser.workingHoursPerDay || editUser.workingHoursPerDay <= 0) {
-//       errors.workingHoursPerDay = t('workingHoursRequired');
+//     if (editUser.lateDeductionRate < 0 || editUser.lateDeductionRate > 100) {
+//       errors.lateDeductionRate = t('invalidDeductionRate');
+//     }
+//     if (editUser.earlyLeaveDeductionRate < 0 || editUser.earlyLeaveDeductionRate > 100) {
+//       errors.earlyLeaveDeductionRate = t('invalidDeductionRate');
 //     }
 //     return errors;
 //   };
@@ -193,14 +240,17 @@
 //     try {
 //       const dataToSend = {
 //         ...editUser,
-//         workingDaysNames: editUser.workingDaysNames.join(','), // تحويل array إلى string
+//         workingDaysNames: editUser.workingDaysNames.join(','),
 //         branches: editUser.branches,
 //         absenceDeductionRate: editUser.absenceDeductionRate / 100,
 //         lateDeductionRate: editUser.lateDeductionRate / 100,
 //         earlyLeaveDeductionRate: editUser.earlyLeaveDeductionRate / 100,
 //         isNightShift: editUser.isNightShift,
+//         allowRemoteAbsence: editUser.allowRemoteAbsence,
 //         workStartTime: formatTime(editUser.workStartTime),
 //         workEndTime: formatTime(editUser.workEndTime),
+//         workingHoursPerDay: editUser.calculatedWorkingHours,
+//         requiredWorkingDays: editUser.expectedMonthlyWorkingDays,
 //       };
 //       await apiPut(`/users/${editUser._id}`, dataToSend);
 //       const params = new URLSearchParams();
@@ -354,18 +404,10 @@
 //                 <p>{t('confirmDelete')}</p>
 //               </div>
 //               <div className="modal-footer">
-//                 <button
-//                   type="button"
-//                   className="btn btn-success"
-//                   onClick={confirmDelete}
-//                 >
+//                 <button type="button" className="btn btn-success" onClick={confirmDelete}>
 //                   <i className="fas fa-check me-2"></i>{t('delete')}
 //                 </button>
-//                 <button
-//                   type="button"
-//                   className="btn btn-danger"
-//                   onClick={() => setDeleteUserId(null)}
-//                 >
+//                 <button type="button" className="btn btn-danger" onClick={() => setDeleteUserId(null)}>
 //                   <i className="fas fa-times me-2"></i>{t('cancel')}
 //                 </button>
 //               </div>
@@ -387,14 +429,20 @@
 //                 className="form-control"
 //                 placeholder={t('name')}
 //                 value={filterName}
-//                 onChange={(e) => { setFilterName(e.target.value); setCurrentPage(1); }}
+//                 onChange={(e) => {
+//                   setFilterName(e.target.value);
+//                   setCurrentPage(1);
+//                 }}
 //               />
 //             </div>
 //             <div className="col-md-6">
 //               <select
 //                 className="form-select"
 //                 value={filterBranch}
-//                 onChange={(e) => { setFilterBranch(e.target.value); setCurrentPage(1); }}
+//                 onChange={(e) => {
+//                   setFilterBranch(e.target.value);
+//                   setCurrentPage(1);
+//                 }}
 //               >
 //                 <option value="">{t('allBranches')}</option>
 //                 {branches.map((branch) => (
@@ -426,7 +474,7 @@
 //                     <tr key={emp._id}>
 //                       <td>{emp.name}</td>
 //                       <td>{emp.email}</td>
-//                       <td>{emp.branches.map(b => b.name).join(', ')}</td>
+//                       <td>{emp.branches.map((b) => b.name).join(', ')}</td>
 //                       <td>
 //                         {emp.isActive ? (
 //                           <span className="badge bg-success">{t('active')}</span>
@@ -441,10 +489,16 @@
 //                         >
 //                           <i className="fas fa-eye"></i> {t('viewProfile')}
 //                         </button>
-//                         <button className="btn btn-sm btn-warning me-1" onClick={() => handleEdit(emp)}>
+//                         <button
+//                           className="btn btn-sm btn-warning me-1"
+//                           onClick={() => handleEdit(emp)}
+//                         >
 //                           <i className="fas fa-edit"></i> {t('edit')}
 //                         </button>
-//                         <button className="btn btn-sm btn-danger me-1" onClick={() => handleDelete(emp._id)}>
+//                         <button
+//                           className="btn btn-sm btn-danger me-1"
+//                           onClick={() => handleDelete(emp._id)}
+//                         >
 //                           <i className="fas fa-trash"></i> {t('delete')}
 //                         </button>
 //                         {!emp.isActive && (
@@ -474,7 +528,9 @@
 //                 </button>
 //               </li>
 //               <li className="page-item disabled">
-//                 <span className="page-link">{currentPage} / {totalPages}</span>
+//                 <span className="page-link">
+//                   {currentPage} / {totalPages}
+//                 </span>
 //               </li>
 //               <li className="page-item">
 //                 <button
@@ -500,7 +556,10 @@
 //                 className="form-control"
 //                 placeholder={`${t('name')} or ${t('email')}`}
 //                 value={pendingFilterName}
-//                 onChange={(e) => { setPendingFilterName(e.target.value); setPendingPage(1); }}
+//                 onChange={(e) => {
+//                   setPendingFilterName(e.target.value);
+//                   setPendingPage(1);
+//                 }}
 //               />
 //             </div>
 //           </div>
@@ -525,7 +584,7 @@
 //                     <tr key={d.deviceFingerprint}>
 //                       <td>{d.userName}</td>
 //                       <td>{d.userEmail}</td>
-//                       <td>{d.branches?.map(b => b.name).join(', ') || 'N/A'}</td>
+//                       <td>{d.branches?.map((b) => b.name).join(', ') || 'N/A'}</td>
 //                       <td>{d.deviceFingerprint}</td>
 //                       <td>
 //                         <button
@@ -552,19 +611,21 @@
 //               <li className="page-item">
 //                 <button
 //                   className="page-link"
-//                   onClick={() => setPendingPage(p => p - 1)}
+//                   onClick={() => setPendingPage((p) => p - 1)}
 //                   disabled={pendingPage === 1}
 //                 >
 //                   <i className="fas fa-chevron-left"></i> {t('previous')}
 //                 </button>
 //               </li>
 //               <li className="page-item disabled">
-//                 <span className="page-link">{pendingPage} / {pendingPages}</span>
+//                 <span className="page-link">
+//                   {pendingPage} / {pendingPages}
+//                 </span>
 //               </li>
 //               <li className="page-item">
 //                 <button
 //                   className="page-link"
-//                   onClick={() => setPendingPage(p => p + 1)}
+//                   onClick={() => setPendingPage((p) => p + 1)}
 //                   disabled={pendingPage >= pendingPages}
 //                 >
 //                   {t('next')} <i className="fas fa-chevron-right"></i>
@@ -580,14 +641,22 @@
 //           <div className="modal-dialog modal-lg" role="document">
 //             <div className="modal-content">
 //               <div className="modal-header">
-//                 <h5 className="modal-title"><i className="fas fa-user-edit me-2"></i>{t('edit')} {editUser.name}</h5>
-//                 <button type="button" className="btn-close" onClick={() => setEditUser(null)} aria-label="Close"></button>
+//                 <h5 className="modal-title">
+//                   <i className="fas fa-user-edit me-2"></i>
+//                   {t('edit')} {editUser.name}
+//                 </h5>
+//                 <button
+//                   type="button"
+//                   className="btn-close"
+//                   onClick={() => setEditUser(null)}
+//                   aria-label="Close"
+//                 ></button>
 //               </div>
 //               <div className="modal-body">
 //                 <form>
 //                   <div className="row">
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('name')}</label>
+//                       <label className="form-label">{t('name')} *</label>
 //                       <input
 //                         type="text"
 //                         className={`form-control ${formErrors.name ? 'is-invalid' : ''}`}
@@ -597,7 +666,7 @@
 //                       {formErrors.name && <div className="invalid-feedback">{formErrors.name}</div>}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('email')}</label>
+//                       <label className="form-label">{t('email')} *</label>
 //                       <input
 //                         type="email"
 //                         className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
@@ -617,9 +686,21 @@
 //                         <option value="admin">{t('admin')}</option>
 //                       </select>
 //                     </div>
+//                     <div className="col-md-6 mb-3">
+//                       <label className="form-label">{t('salary')} * (شهري)</label>
+//                       <input
+//                         type="number"
+//                         className={`form-control ${formErrors.salary ? 'is-invalid' : ''}`}
+//                         value={editUser.salary}
+//                         onChange={(e) => setEditUser({ ...editUser, salary: e.target.value })}
+//                         min="0"
+//                         step="0.01"
+//                       />
+//                       {formErrors.salary && <div className="invalid-feedback">{formErrors.salary}</div>}
+//                     </div>
 //                     <div className="col-md-12 mb-3">
-//                       <label className="form-label">{t('branches')}</label>
-//                       <div className="checkbox-group">
+//                       <label className="form-label">{t('branches')} *</label>
+//                       <div className="checkbox-group border p-3 rounded">
 //                         {branches.map((branch) => (
 //                           <div key={branch._id} className="form-check form-check-inline">
 //                             <input
@@ -629,13 +710,18 @@
 //                               checked={editUser.branches.includes(branch._id)}
 //                               onChange={() => handleBranchChange(branch._id)}
 //                             />
-//                             <label className="form-check-label" htmlFor={`edit-branch-${branch._id}`}>
+//                             <label
+//                               className="form-check-label"
+//                               htmlFor={`edit-branch-${branch._id}`}
+//                             >
 //                               {branch.name}
 //                             </label>
 //                           </div>
 //                         ))}
 //                       </div>
-//                       {formErrors.branches && <div className="text-danger">{formErrors.branches}</div>}
+//                       {formErrors.branches && (
+//                         <div className="text-danger mt-1">{formErrors.branches}</div>
+//                       )}
 //                     </div>
 //                     <div className="col-md-6 mb-3">
 //                       <label className="form-label">{t('phone')}</label>
@@ -655,29 +741,9 @@
 //                         onChange={(e) => setEditUser({ ...editUser, address: e.target.value })}
 //                       />
 //                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('salary')}</label>
-//                       <input
-//                         type="number"
-//                         className={`form-control ${formErrors.salary ? 'is-invalid' : ''}`}
-//                         value={editUser.salary || ''}
-//                         onChange={(e) => setEditUser({ ...editUser, salary: e.target.value })}
-//                       />
-//                       {formErrors.salary && <div className="invalid-feedback">{formErrors.salary}</div>}
-//                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('requiredWorkingDays')}</label>
-//                       <input
-//                         type="number"
-//                         className={`form-control ${formErrors.requiredWorkingDays ? 'is-invalid' : ''}`}
-//                         value={editUser.requiredWorkingDays}
-//                         onChange={(e) => setEditUser({ ...editUser, requiredWorkingDays: e.target.value })}
-//                       />
-//                       {formErrors.requiredWorkingDays && <div className="invalid-feedback">{formErrors.requiredWorkingDays}</div>}
-//                     </div>
 //                     <div className="col-md-12 mb-3">
-//                       <label className="form-label">{t('workingDaysNames')}</label>
-//                       <div className="checkbox-group">
+//                       <label className="form-label">{t('workingDaysNames')} *</label>
+//                       <div className="checkbox-group border p-3 rounded">
 //                         {daysOfWeek.map((day) => (
 //                           <div key={day} className="form-check form-check-inline">
 //                             <input
@@ -693,82 +759,195 @@
 //                           </div>
 //                         ))}
 //                       </div>
-//                       {formErrors.workingDaysNames && <div className="text-danger">{formErrors.workingDaysNames}</div>}
+//                       {formErrors.workingDaysNames && (
+//                         <div className="text-danger mt-1">{formErrors.workingDaysNames}</div>
+//                       )}
+//                       <small className="text-muted">
+//                         الأيام المتوقعة شهرياً: {editUser.expectedMonthlyWorkingDays} يوم
+//                       </small>
 //                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('workingHoursPerDay')}</label>
-//                       <input
-//                         type="number"
-//                         className={`form-control ${formErrors.workingHoursPerDay ? 'is-invalid' : ''}`}
-//                         value={editUser.workingHoursPerDay}
-//                         onChange={(e) => setEditUser({ ...editUser, workingHoursPerDay: e.target.value })}
-//                       />
-//                       {formErrors.workingHoursPerDay && <div className="invalid-feedback">{formErrors.workingHoursPerDay}</div>}
-//                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('workStartTime')}</label>
+//                     <div className="col-md-4 mb-3">
+//                       <label className="form-label">{t('workStartTime')} *</label>
 //                       <input
 //                         type="time"
 //                         className={`form-control ${formErrors.time ? 'is-invalid' : ''}`}
 //                         value={editUser.workStartTime}
-//                         onChange={(e) => setEditUser({ ...editUser, workStartTime: e.target.value })}
+//                         onChange={(e) =>
+//                           setEditUser({ ...editUser, workStartTime: e.target.value })
+//                         }
 //                       />
 //                       {formErrors.time && <div className="invalid-feedback">{formErrors.time}</div>}
 //                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('workEndTime')}</label>
+//                     <div className="col-md-4 mb-3">
+//                       <label className="form-label">{t('workEndTime')} *</label>
 //                       <input
 //                         type="time"
 //                         className={`form-control ${formErrors.time ? 'is-invalid' : ''}`}
 //                         value={editUser.workEndTime}
-//                         onChange={(e) => setEditUser({ ...editUser, workEndTime: e.target.value })}
+//                         onChange={(e) =>
+//                           setEditUser({ ...editUser, workEndTime: e.target.value })
+//                         }
 //                       />
 //                       {formErrors.time && <div className="invalid-feedback">{formErrors.time}</div>}
 //                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('absenceDeductionRate')}</label>
+//                     <div className="col-md-4 mb-3">
+//                       <label className="form-label">ساعات العمل اليومية</label>
 //                       <input
 //                         type="number"
 //                         className="form-control"
-//                         value={editUser.absenceDeductionRate}
-//                         onChange={(e) => setEditUser({ ...editUser, absenceDeductionRate: e.target.value })}
+//                         value={editUser.calculatedWorkingHours}
+//                         disabled
+//                         style={{ backgroundColor: '#f8f9fa' }}
 //                       />
+//                       <small className="text-muted">محسوبة تلقائياً</small>
 //                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('lateDeductionRate')}</label>
-//                       <input
-//                         type="number"
-//                         className="form-control"
-//                         value={editUser.lateDeductionRate}
-//                         onChange={(e) => setEditUser({ ...editUser, lateDeductionRate: e.target.value })}
-//                       />
-//                     </div>
-//                     <div className="col-md-6 mb-3">
-//                       <label className="form-label">{t('earlyLeaveDeductionRate')}</label>
-//                       <input
-//                         type="number"
-//                         className="form-control"
-//                         value={editUser.earlyLeaveDeductionRate}
-//                         onChange={(e) => setEditUser({ ...editUser, earlyLeaveDeductionRate: e.target.value })}
-//                       />
-//                     </div>
-//                     <div className="col-md-6 mb-3 form-check">
+//                     <div className="mb-3 form-check">
 //                       <input
 //                         type="checkbox"
 //                         className="form-check-input"
-//                         checked={editUser.allowRemoteAbsence}
-//                         onChange={(e) => setEditUser({ ...editUser, allowRemoteAbsence: e.target.checked })}
-//                       />
-//                       <label className="form-check-label">{t('allowRemoteAbsence')}</label>
-//                     </div>
-//                     <div className="col-md-6 mb-3 form-check">
-//                       <input
-//                         type="checkbox"
-//                         className="form-check-input"
+//                         id="isNightShift"
 //                         checked={editUser.isNightShift}
-//                         onChange={(e) => setEditUser({ ...editUser, isNightShift: e.target.checked })}
+//                         onChange={(e) =>
+//                           setEditUser({ ...editUser, isNightShift: e.target.checked })
+//                         }
 //                       />
-//                       <label className="form-check-label">{t('isNightShift')}</label>
+//                       <label className="form-check-label" htmlFor="isNightShift">
+//                         {t('isNightShift')} (العمل عبر منتصف الليل)
+//                       </label>
+//                     </div>
+//                     <div className="card mb-3">
+//                       <div className="card-header">
+//                         <h5 className="mb-0">معدلات الخصم (%)</h5>
+//                       </div>
+//                       <div className="card-body">
+//                         <div className="row">
+//                           <div className="col-md-4 mb-3">
+//                             <label className="form-label">{t('absenceDeductionRate')} (%)</label>
+//                             <input
+//                               type="number"
+//                               className={`form-control ${
+//                                 formErrors.absenceDeductionRate ? 'is-invalid' : ''
+//                               }`}
+//                               value={editUser.absenceDeductionRate}
+//                               onChange={(e) =>
+//                                 setEditUser({
+//                                   ...editUser,
+//                                   absenceDeductionRate: e.target.value,
+//                                 })
+//                               }
+//                               min="0"
+//                               max="100"
+//                               step="0.1"
+//                             />
+//                             {formErrors.absenceDeductionRate && (
+//                               <div className="invalid-feedback">
+//                                 {formErrors.absenceDeductionRate}
+//                               </div>
+//                             )}
+//                             <small className="text-muted">
+//                               نسبة الخصم من الراتب اليومي عن كل يوم غياب
+//                             </small>
+//                           </div>
+//                           <div className="col-md-4 mb-3">
+//                             <label className="form-label">{t('lateDeductionRate')} (%)</label>
+//                             <input
+//                               type="number"
+//                               className={`form-control ${
+//                                 formErrors.lateDeductionRate ? 'is-invalid' : ''
+//                               }`}
+//                               value={editUser.lateDeductionRate}
+//                               onChange={(e) =>
+//                                 setEditUser({
+//                                   ...editUser,
+//                                   lateDeductionRate: e.target.value,
+//                                 })
+//                               }
+//                               min="0"
+//                               max="100"
+//                               step="0.1"
+//                             />
+//                             {formErrors.lateDeductionRate && (
+//                               <div className="invalid-feedback">
+//                                 {formErrors.lateDeductionRate}
+//                               </div>
+//                             )}
+//                             <small className="text-muted">
+//                               نسبة الخصم من الراتب الساعي عن كل ساعة تأخير
+//                             </small>
+//                           </div>
+//                           <div className="col-md-4 mb-3">
+//                             <label className="form-label">{t('earlyLeaveDeductionRate')} (%)</label>
+//                             <input
+//                               type="number"
+//                               className={`form-control ${
+//                                 formErrors.earlyLeaveDeductionRate ? 'is-invalid' : ''
+//                               }`}
+//                               value={editUser.earlyLeaveDeductionRate}
+//                               onChange={(e) =>
+//                                 setEditUser({
+//                                   ...editUser,
+//                                   earlyLeaveDeductionRate: e.target.value,
+//                                 })
+//                               }
+//                               min="0"
+//                               max="100"
+//                               step="0.1"
+//                             />
+//                             {formErrors.earlyLeaveDeductionRate && (
+//                               <div className="invalid-feedback">
+//                                 {formErrors.earlyLeaveDeductionRate}
+//                               </div>
+//                             )}
+//                             <small className="text-muted">
+//                               نسبة الخصم من الراتب الساعي عن كل ساعة انصراف مبكر
+//                             </small>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                     <div className="mb-3 form-check">
+//                       <input
+//                         type="checkbox"
+//                         className="form-check-input"
+//                         id="allowRemoteAbsence"
+//                         checked={editUser.allowRemoteAbsence}
+//                         onChange={(e) =>
+//                           setEditUser({ ...editUser, allowRemoteAbsence: e.target.checked })
+//                         }
+//                       />
+//                       <label className="form-check-label" htmlFor="allowRemoteAbsence">
+//                         {t('allowRemoteAbsence')}
+//                       </label>
+//                     </div>
+//                     <div className="card mb-3">
+//                       <div className="card-header">
+//                         <h5 className="mb-0">ملخص الراتب</h5>
+//                       </div>
+//                       <div className="card-body">
+//                         {editUser.salary > 0 && editUser.expectedMonthlyWorkingDays > 0 && (
+//                           <div className="row">
+//                             <div className="col-md-4">
+//                               <strong>الراتب الشهري:</strong> {editUser.salary} جنيه
+//                             </div>
+//                             <div className="col-md-4">
+//                               <strong>الراتب اليومي:</strong>{' '}
+//                               {(editUser.salary / editUser.expectedMonthlyWorkingDays).toFixed(2)}{' '}
+//                               جنيه
+//                             </div>
+//                             <div className="col-md-4">
+//                               <strong>الراتب الساعي:</strong>{' '}
+//                               {editUser.calculatedWorkingHours > 0
+//                                 ? (
+//                                     editUser.salary /
+//                                     (editUser.expectedMonthlyWorkingDays *
+//                                       editUser.calculatedWorkingHours)
+//                                   ).toFixed(2)
+//                                 : '0'}{' '}
+//                               جنيه
+//                             </div>
+//                           </div>
+//                         )}
+//                       </div>
 //                     </div>
 //                   </div>
 //                 </form>
@@ -831,27 +1010,24 @@
 //               </button>
 //             </div>
 //           </div>
-//           {totalSalaries && (
-//             <div className="mt-3">
-//               <h4>{t('total')}: {totalSalaries.totalSalaries}</h4>
-//               <table className="table table-bordered mt-2">
-//                 <thead>
-//                   <tr>
-//                     <th>{t('branch')}</th>
-//                     <th>{t('branchTotal')}</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {Object.entries(totalSalaries.branchTotals).map(([branchId, total]) => {
-//                     const branchName = branches.find((b) => b._id === branchId)?.name || branchId;
-//                     return (
-//                       <tr key={branchId}>
-//                         <td>{branchName}</td>
-//                         <td>{total}</td>
-//                       </tr>
-//                     );
-//                   })}
-//                 </tbody>
+//         {totalSalaries && (
+//   <div className="mt-3">
+//     <h4>{t('total')}: {totalSalaries.totalSalaries}</h4>
+//     <table className="table table-bordered mt-2">
+//       <thead>
+//         <tr>
+//           <th>{t('branch')}</th>
+//           <th>{t('branchTotal')}</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         {Object.entries(totalSalaries.branchTotals || {}).map(([branchId, total]) => (
+//           <tr key={branchId}>
+//             <td>{total.branchName || branchId}</td>
+//             <td>{total.totalSalary}</td>
+//           </tr>
+//         ))}
+//       </tbody>
 //               </table>
 //             </div>
 //           )}
@@ -892,7 +1068,10 @@
 //                 type="text"
 //                 className="form-control"
 //                 value={attendanceFilterName}
-//                 onChange={(e) => { setAttendanceFilterName(e.target.value); setAttendancePage(1); }}
+//                 onChange={(e) => {
+//                   setAttendanceFilterName(e.target.value);
+//                   setAttendancePage(1);
+//                 }}
 //               />
 //             </div>
 //           </div>
@@ -963,7 +1142,9 @@
 //                 </button>
 //               </li>
 //               <li className="page-item disabled">
-//                 <span className="page-link">{attendancePage} / {attendancePagination.pages}</span>
+//                 <span className="page-link">
+//                   {attendancePage} / {attendancePagination.pages}
+//                 </span>
 //               </li>
 //               <li className="page-item">
 //                 <button
@@ -996,7 +1177,8 @@ const AdminDashboard = () => {
   const { t } = useTranslation();
   const [employees, setEmployees] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedSalaryBranch, setSelectedSalaryBranch] = useState(''); // New state for Total Salaries
+  const [selectedAttendanceBranch, setSelectedAttendanceBranch] = useState(''); // New state for Attendance Filters
   const [selectedDate, setSelectedDate] = useState('');
   const [attendance, setAttendance] = useState([]);
   const [error, setError] = useState('');
@@ -1092,7 +1274,7 @@ const AdminDashboard = () => {
   const handleAttendanceFilter = async () => {
     try {
       const params = new URLSearchParams();
-      if (selectedBranch) params.append('branch', selectedBranch);
+      if (selectedAttendanceBranch) params.append('branch', selectedAttendanceBranch);
       if (selectedDate) params.append('date', selectedDate);
       if (attendanceFilterName) params.append('name', encodeURIComponent(attendanceFilterName));
       params.append('page', attendancePage);
@@ -1106,7 +1288,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     handleAttendanceFilter();
-  }, [selectedBranch, selectedDate, attendancePage, attendanceFilterName]);
+  }, [selectedAttendanceBranch, selectedDate, attendancePage, attendanceFilterName]);
 
   useEffect(() => {
     if (editUser) {
@@ -1125,7 +1307,7 @@ const AdminDashboard = () => {
   }, [editUser?.workStartTime, editUser?.workEndTime, editUser?.isNightShift, editUser?.workingDaysNames]);
 
   const handleBranchFilter = (branchId) => {
-    setSelectedBranch(branchId);
+    setSelectedAttendanceBranch(branchId);
     setAttendancePage(1);
   };
 
@@ -1281,7 +1463,7 @@ const AdminDashboard = () => {
 
   const handleCalculateSalaries = async () => {
     try {
-      const res = await apiGet(`/admin/total-salaries?year=${year}&month=${month}${selectedBranch ? `&branchId=${selectedBranch}` : ''}`);
+      const res = await apiGet(`/admin/total-salaries?year=${year}&month=${month}${selectedSalaryBranch ? `&branchId=${selectedSalaryBranch}` : ''}`);
       setTotalSalaries(res.data);
     } catch (err) {
       setError(err.response?.data?.message || t('error'));
@@ -1978,8 +2160,8 @@ const AdminDashboard = () => {
               <label className="form-label">{t('selectBranch')}</label>
               <select
                 className="form-select"
-                value={selectedBranch}
-                onChange={(e) => setSelectedBranch(e.target.value)}
+                value={selectedSalaryBranch}
+                onChange={(e) => setSelectedSalaryBranch(e.target.value)}
               >
                 <option value="">{t('allBranches')}</option>
                 {branches.map((branch) => (
@@ -2006,15 +2188,24 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(totalSalaries.branchTotals).map(([branchId, total]) => {
-                    const branchName = branches.find((b) => b._id === branchId)?.name || branchId;
-                    return (
-                      <tr key={branchId}>
-                        <td>{branchName}</td>
-                        <td>{total}</td>
+                  {(() => {
+                    const branchTotals = totalSalaries.branchTotals || {};
+                    const filteredTotals = selectedSalaryBranch
+                      ? Object.entries(branchTotals).filter(([branchId]) => branchId === selectedSalaryBranch)
+                      : Object.entries(branchTotals);
+                    return filteredTotals.length === 0 ? (
+                      <tr>
+                        <td colSpan="2">{t('noData')}</td>
                       </tr>
+                    ) : (
+                      filteredTotals.map(([branchId, total]) => (
+                        <tr key={branchId}>
+                          <td>{total.branchName || branchId}</td>
+                          <td>{total.totalSalary}</td>
+                        </tr>
+                      ))
                     );
-                  })}
+                  })()}
                 </tbody>
               </table>
             </div>
@@ -2030,7 +2221,7 @@ const AdminDashboard = () => {
               <label className="form-label">{t('selectBranch')}</label>
               <select
                 className="form-select"
-                value={selectedBranch}
+                value={selectedAttendanceBranch}
                 onChange={(e) => handleBranchFilter(e.target.value)}
               >
                 <option value="">{t('allBranches')}</option>
